@@ -1,0 +1,8 @@
+[run]
+command_line= -m pytest
+omit =
+	venv/*
+
+[report]
+include =
+    easy_time_tracker/*
