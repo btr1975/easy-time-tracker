@@ -42,7 +42,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     keywords='',
-    # url=about['__url__'],
+    url=about['__url__'],
     project_urls={
         'Documentation': 'https://easy-time-tracker.readthedocs.io/en/latest/',
         'Source': 'https://github.com/btr1975/easy-time-tracker',
