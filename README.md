@@ -1,6 +1,6 @@
-| BRANCH | STATUS |
-|---|---|
-| master | [![Unit-Testing, Coverage, Linting](https://github.com/btr1975/easy-time-tracker/actions/workflows/test-coverage-lint.yml/badge.svg?branch=master)](https://github.com/btr1975/easy-time-tracker/actions/workflows/test-coverage-lint.yml) |
+| BRANCH  | STATUS |
+|---------|---|
+| main    | [![Unit-Testing, Coverage, Linting](https://github.com/btr1975/easy-time-tracker/actions/workflows/test-coverage-lint.yml/badge.svg?branch=main)](https://github.com/btr1975/easy-time-tracker/actions/workflows/test-coverage-lint.yml) |
 | develop | [![Unit-Testing, Coverage, Linting](https://github.com/btr1975/easy-time-tracker/actions/workflows/test-coverage-lint.yml/badge.svg?branch=develop)](https://github.com/btr1975/easy-time-tracker/actions/workflows/test-coverage-lint.yml) |
 
 [![Downloads](https://pepy.tech/badge/easy-time-tracker)](https://pepy.tech/project/easy-time-tracker)
