@@ -80,7 +80,6 @@ class EasyTimeTracker:
 
         """
         current_record = read_text_file(self.EASY_TIME_TRACKER_CURRENT_RECORD)
-        print(current_record)
         return json.loads(current_record)
 
     def _read_completed_records(self) -> dict:
