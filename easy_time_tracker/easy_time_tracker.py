@@ -13,7 +13,15 @@ from .util.file_read_write import check_if_current_file_exists, write_text_file,
 
 
 class EasyTimeTracker:
-    """Class to create records, and end records"""
+    """Class to create records, and end records, data directories are not created automatically on purpose.
+
+    :cvar EASY_TIME_TRACKER_CURRENT_RECORD: Calculated using users home directory, you can also set an
+                                            environmental variable to save data were you want.
+    :cvar EASY_TIME_TRACKER_COMPLETED_RECORDS: Calculated using users home directory, you can also set an
+                                               environmental variable to save data were you want.
+
+    """
+
     EASY_TIME_TRACKER_CURRENT_RECORD = _EASY_TIME_TRACKER_CURRENT_RECORD
     EASY_TIME_TRACKER_COMPLETED_RECORDS = _EASY_TIME_TRACKER_COMPLETED_RECORDS
 
@@ -117,7 +125,18 @@ class EasyTimeTracker:
 
         write_text_file(self.EASY_TIME_TRACKER_COMPLETED_RECORDS, completed_records.json())
 
-    def write_completed_records_to_excel(self, path: str):
+    def write_completed_records_to_excel(self, path: str) -> None:
+        """Method to export completed records as Excel file
+
+        :type path: String
+        :param path: The path to output file to
+
+        :rtype: None
+        :returns: It writes Excel files
+
+        :raises FileNotFoundError: If completed records ins not found
+
+        """
         file_name = f'completed-records-{datetime.utcnow().date()}.xlsx'
         if check_if_current_file_exists(self.EASY_TIME_TRACKER_COMPLETED_RECORDS):
             completed_records = CompletedTimeRecordsSchema(**self._read_completed_records())
