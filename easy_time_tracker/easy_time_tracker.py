@@ -1,6 +1,7 @@
 """
 easy_time_tracker
 """
+from typing import Optional
 from datetime import datetime
 import json
 from .constants import EASY_TIME_TRACKER_CURRENT_RECORD as _EASY_TIME_TRACKER_CURRENT_RECORD
@@ -49,8 +50,11 @@ class EasyTimeTracker:
         else:
             raise FileExistsError(f'{self.EASY_TIME_TRACKER_CURRENT_RECORD} already exists!!')
 
-    def end_time_record(self) -> None:
+    def end_time_record(self, comments: Optional[str] = None) -> None:
         """Method to end a time record
+
+        :type comments: Optional[str] default: None
+        :param comments: Any comments about the time you want to add
 
         :rtype: None
         :returns: It ends time records at writes archive
@@ -63,7 +67,7 @@ class EasyTimeTracker:
             current_time = datetime.utcnow()
             total_time_worked = current_time - datetime.strptime(start_time_record.start_time, '%Y-%m-%d %H:%M:%S.%f')
             end_time_record = EndTimeRecordSchema(end_time=str(current_time), total_time_worked=str(total_time_worked),
-                                                  **start_time_record.dict())
+                                                  ending_comments=comments, **start_time_record.dict())
 
             self._write_completed_records(end_time_record)
 

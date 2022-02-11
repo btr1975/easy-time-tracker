@@ -1,8 +1,8 @@
 """
 Data schemas
 """
-from typing import List
-from pydantic import BaseModel  # pylint: disable=no-name-in-module
+from typing import List, Optional
+from pydantic import BaseModel, Field  # pylint: disable=no-name-in-module
 
 
 class StartTimeRecordSchema(BaseModel):  # pylint: disable=too-few-public-methods
@@ -16,6 +16,7 @@ class StartTimeRecordSchema(BaseModel):  # pylint: disable=too-few-public-method
 class EndTimeRecordSchema(StartTimeRecordSchema):  # pylint: disable=too-few-public-methods
     """Class schema to end a record"""
     end_time: str
+    ending_comments: Optional[str] = Field(default='no comments added')
     total_time_worked: str
 
 

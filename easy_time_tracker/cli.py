@@ -24,16 +24,18 @@ def cli() -> None:  # pragma: no cover
     # This is the sub parser to stop the clock for a time record
     arg_parser_stop = subparsers.add_parser('stop', help='Stop the clock')
     arg_parser_stop.set_defaults(which_sub='stop')
+    arg_parser_stop.add_argument('-c', '--comments', required=False, default='no comments added',
+                                 help='Any comments you want to add')
 
     args = arg_parser.parse_args()
 
     try:
-        ett_obj =EasyTimeTracker()
+        ett_obj = EasyTimeTracker()
         if args.which_sub == 'start':
             ett_obj.start_time_record(args.description, args.people)
 
         elif args.which_sub == 'stop':
-            ett_obj.end_time_record()
+            ett_obj.end_time_record(args.comments)
 
     except AttributeError as e:  # pylint: disable=invalid-name
         print(f'\n !!! {e} !!! \n')
