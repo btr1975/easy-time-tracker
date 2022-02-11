@@ -11,6 +11,7 @@ Welcome to easy-time-tracker's documentation!
    :caption: Contents:
 
    source/modules/modules
+   source/directions/index
 
 
 

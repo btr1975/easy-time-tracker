@@ -43,6 +43,11 @@ setup(
     long_description_content_type='text/markdown',
     keywords='',
     # url=about['__url__'],
+    project_urls={
+        'Documentation': 'https://easy-time-tracker.readthedocs.io/en/latest/',
+        'Source': 'https://github.com/btr1975/easy-time-tracker',
+        'Tracker': 'https://github.com/btr1975/easy-time-tracker/issues',
+    },
     author=about['__author__'],
     author_email=about['__email__'],
     license=about['__license__'],
