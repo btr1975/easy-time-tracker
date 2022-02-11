@@ -133,3 +133,7 @@ dmypy.json
 
 # Ignore temp_*.py files
 temp_*.py
+
+# Ignore records
+current_record.json
+completed_records.json

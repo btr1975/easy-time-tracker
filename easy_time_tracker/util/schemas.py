@@ -20,5 +20,5 @@ class EndTimeRecordSchema(StartTimeRecordSchema):  # pylint: disable=too-few-pub
 
 
 class CompletedTimeRecordsSchema(BaseModel):  # pylint: disable=too-few-public-methods
-    """Class schema to end a record"""
+    """Class schema for records archive"""
     records: List[EndTimeRecordSchema]
