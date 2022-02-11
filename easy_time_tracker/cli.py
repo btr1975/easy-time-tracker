@@ -27,6 +27,11 @@ def cli() -> None:  # pragma: no cover
     arg_parser_stop.add_argument('-c', '--comments', required=False, default='no comments added',
                                  help='Any comments you want to add')
 
+    # This is the sub parser to output data to files
+    arg_parser_output = subparsers.add_parser('output', help='Output completed records')
+    arg_parser_output.set_defaults(which_sub='output')
+    arg_parser_output.add_argument('-p', '--path', help='Path to store file')
+
     args = arg_parser.parse_args()
 
     try:
@@ -37,11 +42,18 @@ def cli() -> None:  # pragma: no cover
         elif args.which_sub == 'stop':
             ett_obj.end_time_record(args.comments)
 
+        elif args.which_sub == 'output':
+            ett_obj.write_completed_records_to_excel(args.path)
+
     except AttributeError as e:  # pylint: disable=invalid-name
         print(f'\n !!! {e} !!! \n')
         arg_parser.print_help()
 
     except FileNotFoundError as e:  # pylint: disable=invalid-name
+        print(f'\n !!! {e} !!! \n')
+        arg_parser.print_help()
+
+    except FileExistsError as e:  # pylint: disable=invalid-name
         print(f'\n !!! {e} !!! \n')
         arg_parser.print_help()
 

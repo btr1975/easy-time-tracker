@@ -1,13 +1,15 @@
 """
 easy_time_tracker
 """
+import os
 from typing import Optional
 from datetime import datetime
 import json
 from .constants import EASY_TIME_TRACKER_CURRENT_RECORD as _EASY_TIME_TRACKER_CURRENT_RECORD
 from .constants import EASY_TIME_TRACKER_COMPLETED_RECORDS as _EASY_TIME_TRACKER_COMPLETED_RECORDS
 from .util.schemas import StartTimeRecordSchema, EndTimeRecordSchema, CompletedTimeRecordsSchema
-from .util.file_read_write import check_if_current_file_exists, write_text_file, read_text_file, delete_current_file
+from .util.file_read_write import check_if_current_file_exists, write_text_file, read_text_file, delete_current_file, \
+    wrtie_excel_file
 
 
 class EasyTimeTracker:
@@ -114,3 +116,20 @@ class EasyTimeTracker:
             completed_records = CompletedTimeRecordsSchema(records=[current_completed_record])
 
         write_text_file(self.EASY_TIME_TRACKER_COMPLETED_RECORDS, completed_records.json())
+
+    def write_completed_records_to_excel(self, path: str):
+        file_name = f'completed-records-{datetime.utcnow().date()}.xlsx'
+        if check_if_current_file_exists(self.EASY_TIME_TRACKER_COMPLETED_RECORDS):
+            completed_records = CompletedTimeRecordsSchema(**self._read_completed_records())
+            headers = None
+            data = []
+            for index, record in enumerate(completed_records.records):
+                if index == 0:
+                    headers = record.dict().keys()
+
+                data.append(record.dict().values())
+
+            wrtie_excel_file(os.path.join(path, file_name), data, headers)
+
+        else:
+            raise FileNotFoundError(f'{self.EASY_TIME_TRACKER_COMPLETED_RECORDS} not found!!')

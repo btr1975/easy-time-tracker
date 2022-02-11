@@ -2,6 +2,8 @@
 Utils for reading and writing files
 """
 import os
+from typing import Collection, Any
+import pandas as pd
 
 
 def check_if_current_file_exists(path: str) -> bool:
@@ -61,3 +63,22 @@ def delete_current_file(path: str) -> None:
     """
     if check_if_current_file_exists(path):
         os.remove(path)
+
+
+def wrtie_excel_file(path: str, data: Any, headers: Collection) -> None:
+    """Function to write to Excel file
+
+    :type path: String
+    :param path: The full path to the file name
+    :type data: Any
+    :param data: The column data
+    :type headers: Collection
+    :param headers: The column headers
+
+    :rtype: None
+    :returns: It creates Excel
+
+    """
+    df = pd.DataFrame(data=data, columns=headers)
+
+    df.to_excel(path)
