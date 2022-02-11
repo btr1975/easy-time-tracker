@@ -18,8 +18,9 @@ package_data = {}
 
 install_requires = [
     "pydantic~=1.9.0",
-    "pandas~=1.1.5; python_version <= '3.6'",
-    "pandas~=1.4.0; python_version >= '3.7'",
+    "pandas~=1.1.5; python_version == '3.6'",
+    "pandas~=1.3.5; python_version == '3.7'",
+    "pandas~=1.4.0; python_version >= '3.8'",
     "openpyxl~=3.0.9"
 ]
 
@@ -68,5 +69,6 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
 )
