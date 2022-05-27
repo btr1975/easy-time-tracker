@@ -1,8 +1,8 @@
 """
 A simple GUI
 """
-import tkinter as tk  # pylint: disable=import-error
-from tkinter import messagebox  # pylint: disable=import-error
+import tkinter as tk
+from tkinter import messagebox
 from .easy_time_tracker import EasyTimeTracker
 
 
@@ -48,7 +48,7 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
         self.start_button['text'] = 'START'
         self.start_button['command'] = self.start_button_callback
         self.start_button.pack(side='top')
-        self.start_group.append(self.start_button)
+        self.start_group.append((self.start_button, 'top'))
         self.hide(self.stop_group)
 
     def create_stop_button(self) -> None:
@@ -61,7 +61,7 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
         self.stop_button['text'] = 'STOP'
         self.stop_button['command'] = self.stop_button_callback
         self.stop_button.pack(side='top')
-        self.stop_group.append(self.stop_button)
+        self.stop_group.append((self.stop_button, 'top'))
 
     def create_description_text_box(self) -> None:
         """Method to create the description text box and label for it
@@ -74,8 +74,8 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
         self.description_text_box_label.pack(side='bottom')
         self.description_text_box = tk.Entry(self, width=120, font=20)
         self.description_text_box.pack(side='bottom')
-        self.start_group.append(self.description_text_box_label)
-        self.start_group.append(self.description_text_box)
+        self.start_group.append((self.description_text_box_label, 'bottom'))
+        self.start_group.append((self.description_text_box, 'bottom'))
 
     def create_people_text_box(self) -> None:
         """Method to create the people text box and label for it
@@ -88,8 +88,8 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
         self.people_text_box_label.pack(side='bottom')
         self.people_text_box = tk.Entry(self, width=120, font=20)
         self.people_text_box.pack(side='bottom')
-        self.start_group.append(self.people_text_box_label)
-        self.start_group.append(self.people_text_box)
+        self.start_group.append((self.people_text_box_label, 'bottom'))
+        self.start_group.append((self.people_text_box, 'bottom'))
 
     def create_comments_text_box(self) -> None:
         """Method to create the comments text box and label for it
@@ -102,8 +102,8 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
         self.comments_text_box_label.pack(side='bottom')
         self.comments_text_box = tk.Entry(self, width=120, font=20)
         self.comments_text_box.pack(side='bottom')
-        self.stop_group.append(self.comments_text_box_label)
-        self.stop_group.append(self.comments_text_box)
+        self.stop_group.append((self.comments_text_box_label, 'bottom'))
+        self.stop_group.append((self.comments_text_box, 'bottom'))
 
     def start_button_callback(self) -> None:
         """Method for the callback of a start button click
@@ -118,10 +118,24 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
             people = self.people_text_box.get().split(',')
 
         if len(self.description_text_box.get()) > 0:
-            self.ett_obj.start_time_record(self.description_text_box.get(), people)
+            try:
+                self.ett_obj.start_time_record(self.description_text_box.get(), people)
 
-            self.unhide(self.stop_group)
-            self.hide(self.start_group)
+                self.clear_text_box(self.description_text_box)
+                self.clear_text_box(self.people_text_box)
+
+                self.unhide(self.stop_group)
+                self.hide(self.start_group)
+
+            except FileExistsError:
+                response = messagebox.askquestion(title='RECORD IN PROGRESS',
+                                                  message='Would you like to end the in progress record?')
+
+                if response == 'yes':
+                    self.stop_button_callback()
+
+                else:
+                    messagebox.showinfo(title='RECORD IN PROGRESS', message='Record in progress will keep going.')
 
         else:
             messagebox.showerror(title='MISSING REQUIRED DATA!!', message='A Description is required!')
@@ -133,8 +147,23 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
         :returns: None
         """
         self.ett_obj.end_time_record(self.comments_text_box.get())
+
+        self.clear_text_box(self.comments_text_box)
+
         self.unhide(self.start_group)
         self.hide(self.stop_group)
+
+    @staticmethod
+    def clear_text_box(text_box: tk.Entry):
+        """Static Method to clear a text box
+
+        :type text_box: tk.Entry
+        :param text_box: The text box to clear
+
+        :rtype: None
+        :returns: None
+        """
+        text_box.delete(0, tk.END)
 
     @staticmethod
     def hide(group: list) -> None:
@@ -144,7 +173,7 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
         :returns: None
         """
         for item in group:
-            item.pack_forget()
+            item[0].pack_forget()
 
     @staticmethod
     def unhide(group: list) -> None:
@@ -154,7 +183,7 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
         :returns: None
         """
         for item in group:
-            item.pack()
+            item[0].pack(side=item[1])
 
 
 def ett_gui() -> None:
