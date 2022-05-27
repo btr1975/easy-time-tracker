@@ -25,21 +25,22 @@ A simple work time tracker CLI
 ```text
 
 (venv) user@main-pc:~/some-directory$ ett -h
-usage: ett [-h] {start,stop,output} ...
+usage: ett [-h] {start,stop,output,gui} ...
 
 easy-time-tracker
 
 optional arguments:
-  -h, --help           show this help message and exit
+  -h, --help            show this help message and exit
 
 commands:
   Valid commands: a single command is required
 
-  {start,stop,output}  CLI Help
-    start              Start the clock
-    stop               Stop the clock
-    output             Output completed records
-
+  {start,stop,output,gui}
+                        CLI Help
+    start               Start the clock
+    stop                Stop the clock
+    output              Output completed records
+    gui                 Start the GUI
 ```
 
 * Example help for start, people is optional it is to include names of people that were in a meeting.
