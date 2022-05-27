@@ -3,6 +3,7 @@ easy_time_tracker CLI
 """
 from argparse import ArgumentParser
 from .easy_time_tracker import EasyTimeTracker
+from .gui import ett_gui
 
 
 def cli() -> None:  # pragma: no cover
@@ -32,18 +33,25 @@ def cli() -> None:  # pragma: no cover
     arg_parser_output.set_defaults(which_sub='output')
     arg_parser_output.add_argument('-p', '--path', help='Path to store file')
 
+    arg_parser_gui = subparsers.add_parser('gui', help='Start the GUI')
+    arg_parser_gui.set_defaults(which_sub='gui')
+
     args = arg_parser.parse_args()
 
     try:
-        ett_obj = EasyTimeTracker()
-        if args.which_sub == 'start':
-            ett_obj.start_time_record(args.description, args.people)
+        if args.which_sub != 'gui':
+            ett_obj = EasyTimeTracker()
+            if args.which_sub == 'start':
+                ett_obj.start_time_record(args.description, args.people)
 
-        elif args.which_sub == 'stop':
-            ett_obj.end_time_record(args.comments)
+            elif args.which_sub == 'stop':
+                ett_obj.end_time_record(args.comments)
 
-        elif args.which_sub == 'output':
-            ett_obj.write_completed_records_to_excel(args.path)
+            elif args.which_sub == 'output':
+                ett_obj.write_completed_records_to_excel(args.path)
+
+        elif args.which_sub == 'gui':
+            ett_gui()
 
     except AttributeError as e:  # pylint: disable=invalid-name
         print(f'\n !!! {e} !!! \n')
