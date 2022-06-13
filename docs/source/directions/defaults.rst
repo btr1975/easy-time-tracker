@@ -12,7 +12,8 @@ Default Settings
    +----------------------------------------------------+---------------------------------------+---------------------------------------+
    | User Home directory ./easy-time-tracker-data       |    completed_records.json             |   Time record archive                 |
    +----------------------------------------------------+---------------------------------------+---------------------------------------+
-
+   | User Home directory ./easy-time-tracker-data       |    projects.txt                       |   A list of project names             |
+   +----------------------------------------------------+---------------------------------------+---------------------------------------+
 
 Changeable Settings
 ===================
@@ -27,4 +28,6 @@ Changeable Settings
    | EASY_TIME_TRACKER_CURRENT_RECORD                   | Set full path and file name           |
    +----------------------------------------------------+---------------------------------------+
    | EASY_TIME_TRACKER_COMPLETED_RECORDS                | Set full path and file name           |
+   +----------------------------------------------------+---------------------------------------+
+   | EASY_TIME_TRACKER_PROJECT_LIST                     | Set full path and file name           |
    +----------------------------------------------------+---------------------------------------+

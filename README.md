@@ -13,10 +13,11 @@ A simple work time tracker CLI
 
 * Set these variables if you want to save your data somewhere else.
 
-| VARIABLE | USE | DEFAULT-FILE-NAME |
-|---|---|---|
-| EASY_TIME_TRACKER_CURRENT_RECORD | Set the location of where to store this data | current_record.json |
+| VARIABLE | USE                                          | DEFAULT-FILE-NAME      |
+|---|----------------------------------------------|------------------------|
+| EASY_TIME_TRACKER_CURRENT_RECORD | Set the location of where to store this data | current_record.json    |
 | EASY_TIME_TRACKER_COMPLETED_RECORDS | Set the location of where to store this data | completed_records.json |
+| EASY_TIME_TRACKER_PROJECT_LIST      | Set the location of where to store this data | projects.txt           |
 
 ### Notes
 
@@ -47,7 +48,7 @@ commands:
 
 ```text
 (venv) user@main-pc:~/some-directory$ ett start -h
-usage: ett start [-h] [-d DESCRIPTION] [-p PEOPLE [PEOPLE ...]]
+usage: ett start [-h] [-d DESCRIPTION] [-p PEOPLE [PEOPLE ...]] [--project PROJECT]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -55,5 +56,6 @@ optional arguments:
                         Description of the time
   -p PEOPLE [PEOPLE ...], --people PEOPLE [PEOPLE ...]
                         List of people
+  --project PROJECT     Project
 
 ```

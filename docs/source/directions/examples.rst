@@ -31,7 +31,7 @@ Example help for start
 .. code-block:: bash
 
    (venv) user@main-pc:~/some-directory$ ett start -h
-   usage: ett start [-h] [-d DESCRIPTION] [-p PEOPLE [PEOPLE ...]]
+   usage: ett start [-h] [-d DESCRIPTION] [-p PEOPLE [PEOPLE ...]] [--project PROJECT]
 
    optional arguments:
      -h, --help            show this help message and exit
@@ -39,3 +39,11 @@ Example help for start
                            Description of the time
      -p PEOPLE [PEOPLE ...], --people PEOPLE [PEOPLE ...]
                            List of people
+     --project PROJECT     Project
+
+Example start Simple GUI
+----------------------
+
+.. code-block:: bash
+
+   (venv) user@main-pc:~/some-directory$ ett gui
