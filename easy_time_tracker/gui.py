@@ -4,6 +4,8 @@ A simple GUI
 import tkinter as tk
 from tkinter import messagebox
 from .easy_time_tracker import EasyTimeTracker
+from .constants import EASY_TIME_TRACKER_PROJECT_LIST
+from .util.file_read_write import check_if_current_file_exists, read_text_file
 
 
 class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
@@ -30,8 +32,15 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
         self.comments_text_box = None
         self.people_text_box_label = None
         self.people_text_box = None
+        self.project_dropdown_label = None
+        self.project_dropdown = None
+        self.project_dropdown_clicked = None
         self.create_description_text_box()
         self.create_people_text_box()
+        if check_if_current_file_exists(EASY_TIME_TRACKER_PROJECT_LIST):
+            projects = read_text_file(EASY_TIME_TRACKER_PROJECT_LIST).splitlines()
+            if len(projects) >= 1:
+                self.create_project_dropdown(projects)
         self.create_comments_text_box()
         self.create_stop_button()
         self.create_start_button()
@@ -91,6 +100,27 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
         self.start_group.append((self.people_text_box_label, 'bottom'))
         self.start_group.append((self.people_text_box, 'bottom'))
 
+    def create_project_dropdown(self, projects: list) -> None:
+        """Method to create the project dropdown box
+
+        :type projects: list
+        :param projects: The list of projects
+
+        :rtype: None
+        :returns: None
+        """
+        self.project_dropdown_label = tk.Label(self, font=20)
+        self.project_dropdown_label['text'] = 'Project'
+        self.project_dropdown_label.pack(side='bottom')
+        # datatype of menu text
+        self.project_dropdown_clicked = tk.StringVar()
+        # initial menu text
+        self.project_dropdown_clicked.set('NA')
+        self.project_dropdown = tk.OptionMenu(self, self.project_dropdown_clicked, *projects)
+        self.project_dropdown.pack(side='bottom')
+        self.start_group.append((self.project_dropdown_label, 'bottom'))
+        self.start_group.append((self.project_dropdown, 'bottom'))
+
     def create_comments_text_box(self) -> None:
         """Method to create the comments text box and label for it
 
@@ -119,7 +149,12 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
 
         if len(self.description_text_box.get()) > 0:
             try:
-                self.ett_obj.start_time_record(self.description_text_box.get(), people)
+                if self.project_dropdown_clicked.get() != 'NA':
+                    self.ett_obj.start_time_record(description=self.description_text_box.get(), people=people,
+                                                   project=self.project_dropdown_clicked.get())
+
+                else:
+                    self.ett_obj.start_time_record(description=self.description_text_box.get(), people=people)
 
                 self.clear_text_box(self.description_text_box)
                 self.clear_text_box(self.people_text_box)

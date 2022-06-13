@@ -36,6 +36,14 @@ easy\_time\_tracker.easy\_time\_tracker module
    :undoc-members:
    :show-inheritance:
 
+easy\_time\_tracker.gui module
+----------------------------------------------
+
+.. automodule:: easy_time_tracker.gui
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 easy\_time\_tracker.version module
 ----------------------------------
 

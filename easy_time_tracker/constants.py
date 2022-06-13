@@ -12,3 +12,6 @@ EASY_TIME_TRACKER_CURRENT_RECORD = os.getenv('EASY_TIME_TRACKER_CURRENT_RECORD')
 # The name to use for the completed records
 EASY_TIME_TRACKER_COMPLETED_RECORDS = os.getenv('EASY_TIME_TRACKER_COMPLETED_RECORDS') or \
                                       os.path.join(Path.home(), 'easy-time-tracker-data', 'completed_records.json')
+# The name to use for the list of projects
+EASY_TIME_TRACKER_PROJECT_LIST = os.getenv('EASY_TIME_TRACKER_PROJECT_LIST') or \
+                                 os.path.join(Path.home(), 'easy-time-tracker-data', 'projects.txt')

@@ -7,6 +7,7 @@ from datetime import datetime
 import json
 from .constants import EASY_TIME_TRACKER_CURRENT_RECORD as _EASY_TIME_TRACKER_CURRENT_RECORD
 from .constants import EASY_TIME_TRACKER_COMPLETED_RECORDS as _EASY_TIME_TRACKER_COMPLETED_RECORDS
+from .constants import EASY_TIME_TRACKER_PROJECT_LIST as _EASY_TIME_TRACKER_PROJECT_LIST
 from .util.schemas import StartTimeRecordSchema, EndTimeRecordSchema, CompletedTimeRecordsSchema
 from .util.file_read_write import check_if_current_file_exists, write_text_file, read_text_file, delete_current_file, \
     wrtie_excel_file
@@ -21,11 +22,11 @@ class EasyTimeTracker:
                                                environmental variable to save data were you want.
 
     """
-
     EASY_TIME_TRACKER_CURRENT_RECORD = _EASY_TIME_TRACKER_CURRENT_RECORD
     EASY_TIME_TRACKER_COMPLETED_RECORDS = _EASY_TIME_TRACKER_COMPLETED_RECORDS
+    EASY_TIME_TRACKER_PROJECT_LIST = _EASY_TIME_TRACKER_PROJECT_LIST
 
-    def start_time_record(self, description: str, people: list) -> None:
+    def start_time_record(self, description: str, people: list, project: Optional[str] = None) -> None:
         """Method to create a record and write the data
 
         :type description: String
@@ -37,8 +38,21 @@ class EasyTimeTracker:
         :returns: None
 
         """
-        start_time_record = StartTimeRecordSchema(description=description, people=people, time_zone='UTC',
-                                                  start_time=str(datetime.utcnow()))
+        if project:
+            if not check_if_current_file_exists(self.EASY_TIME_TRACKER_PROJECT_LIST):
+                raise FileNotFoundError(f'Could not find file {self.EASY_TIME_TRACKER_PROJECT_LIST}')
+
+            projects = read_text_file(self.EASY_TIME_TRACKER_PROJECT_LIST).splitlines()
+
+            if project not in projects:
+                raise KeyError(f'project {project} not in file {self.EASY_TIME_TRACKER_PROJECT_LIST}')
+
+            start_time_record = StartTimeRecordSchema(description=description, people=people, project=project,
+                                                      time_zone='UTC', start_time=str(datetime.utcnow()))
+
+        else:
+            start_time_record = StartTimeRecordSchema(description=description, people=people, time_zone='UTC',
+                                                      start_time=str(datetime.utcnow()))
 
         self._write_current_record(start_time_record)
 

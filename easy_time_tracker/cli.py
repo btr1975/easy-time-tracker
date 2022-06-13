@@ -21,6 +21,7 @@ def cli() -> None:  # pragma: no cover
     arg_parser_start.set_defaults(which_sub='start')
     arg_parser_start.add_argument('-d', '--description', help='Description of the time')
     arg_parser_start.add_argument('-p', '--people', nargs='+', default=[], help='List of people')
+    arg_parser_start.add_argument('--project', required=False, help='Project')
 
     # This is the sub parser to stop the clock for a time record
     arg_parser_stop = subparsers.add_parser('stop', help='Stop the clock')
@@ -42,7 +43,7 @@ def cli() -> None:  # pragma: no cover
         if args.which_sub != 'gui':
             ett_obj = EasyTimeTracker()
             if args.which_sub == 'start':
-                ett_obj.start_time_record(args.description, args.people)
+                ett_obj.start_time_record(args.description, args.people, args.project)
 
             elif args.which_sub == 'stop':
                 ett_obj.end_time_record(args.comments)

@@ -9,6 +9,7 @@ class StartTimeRecordSchema(BaseModel):  # pylint: disable=too-few-public-method
     """Class schema to start a record"""
     description: str
     people: list
+    project: Optional[str] = Field(default='na')
     time_zone: str
     start_time: str
 
