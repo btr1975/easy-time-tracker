@@ -5,6 +5,7 @@ easy_time_tracker
 import os
 from typing import Optional
 from datetime import datetime
+from datetime import UTC
 import json
 from .constants import EASY_TIME_TRACKER_CURRENT_RECORD as _EASY_TIME_TRACKER_CURRENT_RECORD
 from .constants import EASY_TIME_TRACKER_COMPLETED_RECORDS as _EASY_TIME_TRACKER_COMPLETED_RECORDS
@@ -75,7 +76,7 @@ class EasyTimeTracker:
         :raises FileExistsError: If a current working record exists already
         """
         if not check_if_current_file_exists(self.EASY_TIME_TRACKER_CURRENT_RECORD):
-            write_text_file(self.EASY_TIME_TRACKER_CURRENT_RECORD, start_time_record.json())
+            write_text_file(self.EASY_TIME_TRACKER_CURRENT_RECORD, start_time_record.model_dump_json())
 
         else:
             raise FileExistsError(f"{self.EASY_TIME_TRACKER_CURRENT_RECORD} already exists!!")
@@ -97,7 +98,7 @@ class EasyTimeTracker:
                 end_time=str(current_time),
                 total_time_worked=str(total_time_worked),
                 ending_comments=comments,
-                **start_time_record.dict(),
+                **start_time_record.model_dump(),
             )
 
             self._write_completed_records(end_time_record)
@@ -137,7 +138,7 @@ class EasyTimeTracker:
         else:
             completed_records = CompletedTimeRecordsSchema(records=[current_completed_record])
 
-        write_text_file(self.EASY_TIME_TRACKER_COMPLETED_RECORDS, completed_records.json())
+        write_text_file(self.EASY_TIME_TRACKER_COMPLETED_RECORDS, completed_records.model_dump_json())
 
     def write_completed_records_to_excel(self, path: str) -> None:
         """Method to export completed records as Excel file
@@ -155,9 +156,9 @@ class EasyTimeTracker:
             data = []
             for index, record in enumerate(completed_records.records):
                 if index == 0:
-                    headers = record.dict().keys()
+                    headers = record.model_dump().keys()
 
-                data.append(record.dict().values())
+                data.append(record.model_dump().values())
 
             wrtie_excel_file(os.path.join(path, file_name), data, headers)
 
