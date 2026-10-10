@@ -20,6 +20,8 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
         self._client = neosqlite_connection
 
         self._database_name = "easy_time_tracker"
+        self._projects_collection = "projects"
+        self._people_collection = "people"
 
     def get_database(self) -> Connection:
         """Method to get the database
