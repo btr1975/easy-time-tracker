@@ -573,6 +573,7 @@ name = "easy-time-tracker"
 version = "2.0.0"
 source = { editable = "." }
 dependencies = [
+    { name = "neosqlite" },
     { name = "openpyxl" },
     { name = "pandas" },
     { name = "pydantic" },
@@ -596,6 +597,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "neosqlite", specifier = ">=1.17.1" },
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pandas", specifier = ">=3.0.6" },
     { name = "pydantic", specifier = ">=2.14.0" },
@@ -1116,6 +1118,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/21/dc/603751677fff302f34396e206b610f556a59d7fe58b9a2145f54e96b48e8/myst_parser-5.1.0.tar.gz", hash = "sha256:ab69322dc6719dcc7f296479dbb70181b66df6ed315064f92dbc85c0e1bf2f02", size = 101182, upload-time = "2026-05-13T09:38:19.361Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/09/dc/f3dfb7488b770f3f67e6545085bf2abea5172e88f57b8ad25ef860ca704c/myst_parser-5.1.0-py3-none-any.whl", hash = "sha256:9c91c52b3cdb4d94a6506e4fab4e2f296c7623a0da0dcbe6de1565c3dad67a8a", size = 85817, upload-time = "2026-05-13T09:38:17.904Z" },
+]
+
+[[package]]
+name = "neosqlite"
+version = "1.17.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ed/e0/9b83f079f1cdab164a5d430ccd3dd21a5274114d6ad1a0b1c44141ebcd29/neosqlite-1.17.1.tar.gz", hash = "sha256:92edd3606d41cca1aa59ea20c9e8a83c9cbded7ff6779a01dfc0b80de1d97b23", size = 306446, upload-time = "2026-10-01T03:04:48.588Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/59/2b/b37a59da38239c6fdfa4a564efec0624260e36dba36b8f754bd24e049bc3/neosqlite-1.17.1-py3-none-any.whl", hash = "sha256:b88dc7698660d7d2137505a0cdfb1568ed85c9a3d66fdd665fd8716a33ac228f", size = 366832, upload-time = "2026-10-01T03:04:50.636Z" },
 ]
 
 [[package]]
