@@ -42,9 +42,9 @@ classifiers = [
     "Programming Language :: Python :: 3.14",]
 
 dependencies = [
-    "pydantic",
-    "pandas",
-    "openpyxl",
+    "pydantic>=2.14.0",
+    "pandas>=3.0.6",
+    "openpyxl>=3.1.5",
 ]
 
 [dependency-groups]
