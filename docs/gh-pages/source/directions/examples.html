@@ -1,0 +1,164 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installs as a linux style cli &mdash; easy-time-tracker v2.0.0 2.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/my_theme.css?v=f7a27adb" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=51b770b3"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Default Settings" href="defaults.html" />
+    <link rel="prev" title="Directions" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            easy-time-tracker v2.0.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../code/modules.html">easy_time_tracker</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Directions</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Installs as a linux style cli</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-help">Using help</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-help-for-start">Example help for start</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-start-simple-gui">Example start Simple GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="defaults.html">Default Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="defaults.html#changeable-settings">Changeable Settings</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">easy-time-tracker v2.0.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Directions</a></li>
+      <li class="breadcrumb-item active">Installs as a linux style cli</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source/directions/examples.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installs-as-a-linux-style-cli">
+<h1>Installs as a linux style cli<a class="headerlink" href="#installs-as-a-linux-style-cli" title="Link to this heading"></a></h1>
+<section id="using-help">
+<h2>Using help<a class="headerlink" href="#using-help" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>venv<span class="o">)</span><span class="w"> </span>user@main-pc:~/some-directory$<span class="w"> </span>ett<span class="w"> </span>-h
+usage:<span class="w"> </span>ett<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">{</span>start,stop,output,gui<span class="o">}</span><span class="w"> </span>...
+
+easy-time-tracker
+
+optional<span class="w"> </span>arguments:
+<span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+
+commands:
+<span class="w">  </span>Valid<span class="w"> </span>commands:<span class="w"> </span>a<span class="w"> </span>single<span class="w"> </span><span class="nb">command</span><span class="w"> </span>is<span class="w"> </span>required
+
+<span class="w">  </span><span class="o">{</span>start,stop,output,gui<span class="o">}</span>
+<span class="w">                        </span>CLI<span class="w"> </span>Help
+<span class="w">    </span>start<span class="w">               </span>Start<span class="w"> </span>the<span class="w"> </span>clock
+<span class="w">    </span>stop<span class="w">                </span>Stop<span class="w"> </span>the<span class="w"> </span>clock
+<span class="w">    </span>output<span class="w">              </span>Output<span class="w"> </span>completed<span class="w"> </span>records
+<span class="w">    </span>gui<span class="w">                 </span>Start<span class="w"> </span>the<span class="w"> </span>GUI
+</pre></div>
+</div>
+</section>
+<section id="example-help-for-start">
+<h2>Example help for start<a class="headerlink" href="#example-help-for-start" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>venv<span class="o">)</span><span class="w"> </span>user@main-pc:~/some-directory$<span class="w"> </span>ett<span class="w"> </span>start<span class="w"> </span>-h
+usage:<span class="w"> </span>ett<span class="w"> </span>start<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-d<span class="w"> </span>DESCRIPTION<span class="o">]</span><span class="w"> </span><span class="o">[</span>-p<span class="w"> </span>PEOPLE<span class="w"> </span><span class="o">[</span>PEOPLE<span class="w"> </span>...<span class="o">]]</span><span class="w"> </span><span class="o">[</span>--project<span class="w"> </span>PROJECT<span class="o">]</span>
+
+optional<span class="w"> </span>arguments:
+<span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+<span class="w">  </span>-d<span class="w"> </span>DESCRIPTION,<span class="w"> </span>--description<span class="w"> </span>DESCRIPTION
+<span class="w">                        </span>Description<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span><span class="nb">time</span>
+<span class="w">  </span>-p<span class="w"> </span>PEOPLE<span class="w"> </span><span class="o">[</span>PEOPLE<span class="w"> </span>...<span class="o">]</span>,<span class="w"> </span>--people<span class="w"> </span>PEOPLE<span class="w"> </span><span class="o">[</span>PEOPLE<span class="w"> </span>...<span class="o">]</span>
+<span class="w">                        </span>List<span class="w"> </span>of<span class="w"> </span>people
+<span class="w">  </span>--project<span class="w"> </span>PROJECT<span class="w">     </span>Project
+</pre></div>
+</div>
+</section>
+<section id="example-start-simple-gui">
+<h2>Example start Simple GUI<a class="headerlink" href="#example-start-simple-gui" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>venv<span class="o">)</span><span class="w"> </span>user@main-pc:~/some-directory$<span class="w"> </span>ett<span class="w"> </span>gui
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Directions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="defaults.html" class="btn btn-neutral float-right" title="Default Settings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Copyright (c) 2026 Benjamin P. Trachtenberg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

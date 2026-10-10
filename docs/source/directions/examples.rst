@@ -42,7 +42,7 @@ Example help for start
      --project PROJECT     Project
 
 Example start Simple GUI
-----------------------
+--------------------------
 
 .. code-block:: bash
 

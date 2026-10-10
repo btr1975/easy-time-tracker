@@ -67,7 +67,7 @@ IF "%option%" == "pip-export" (
 
 IF "%option%" == "gh-pages" (
     rmdir /s /q docs\source\code
-    uv run sphinx-apidoc -o ./docs/source/code ./temporal_private
+    uv run sphinx-apidoc -o ./docs/source/code ./easy_time_tracker
     uv run sphinx-build ./docs ./docs/gh-pages
     GOTO END
 )

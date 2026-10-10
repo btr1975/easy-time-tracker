@@ -10,7 +10,7 @@ Welcome to easy-time-tracker's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   source/modules/modules
+   source/code/modules
    source/directions/index
 
 

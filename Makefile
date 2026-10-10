@@ -52,7 +52,7 @@ pip-export:
 
 gh-pages:
 	@rm -rf ./docs/source/code
-	@uv run sphinx-apidoc -o ./docs/source/code ./temporal_private
+	@uv run sphinx-apidoc -o ./docs/source/code ./easy_time_tracker
 	@uv run sphinx-build ./docs ./docs/gh-pages
 
 complexipy:
