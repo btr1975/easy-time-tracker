@@ -4,9 +4,9 @@ A simple GUI
 
 import tkinter as tk
 from tkinter import messagebox
-from .easy_time_tracker import EasyTimeTracker
-from .constants import EASY_TIME_TRACKER_PROJECT_LIST
-from .util.file_read_write import check_if_current_file_exists, read_text_file
+from easy_time_tracker.easy_time_tracker import EasyTimeTracker
+from easy_time_tracker.constants import EASY_TIME_TRACKER_PROJECT_LIST
+from easy_time_tracker.util.file_read_write import check_if_current_file_exists, read_text_file
 
 
 class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
@@ -20,7 +20,7 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
     start_group = []
     stop_group = []
 
-    def __init__(self, master: tk.Tk = None) -> None:
+    def __init__(self, master: tk.Tk) -> None:
         super().__init__(master)
         self.master = master
         self.pack(padx=25, pady=25)

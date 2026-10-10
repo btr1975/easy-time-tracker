@@ -5,13 +5,12 @@ easy_time_tracker
 import os
 from typing import Optional
 from datetime import datetime
-from datetime import UTC
 import json
-from .constants import EASY_TIME_TRACKER_CURRENT_RECORD as _EASY_TIME_TRACKER_CURRENT_RECORD
-from .constants import EASY_TIME_TRACKER_COMPLETED_RECORDS as _EASY_TIME_TRACKER_COMPLETED_RECORDS
-from .constants import EASY_TIME_TRACKER_PROJECT_LIST as _EASY_TIME_TRACKER_PROJECT_LIST
-from .util.schemas import StartTimeRecordSchema, EndTimeRecordSchema, CompletedTimeRecordsSchema
-from .util.file_read_write import (
+from easy_time_tracker.constants import EASY_TIME_TRACKER_CURRENT_RECORD as _EASY_TIME_TRACKER_CURRENT_RECORD
+from easy_time_tracker.constants import EASY_TIME_TRACKER_COMPLETED_RECORDS as _EASY_TIME_TRACKER_COMPLETED_RECORDS
+from easy_time_tracker.constants import EASY_TIME_TRACKER_PROJECT_LIST as _EASY_TIME_TRACKER_PROJECT_LIST
+from easy_time_tracker.util.schemas import StartTimeRecordSchema, EndTimeRecordSchema, CompletedTimeRecordsSchema
+from easy_time_tracker.util.file_read_write import (
     check_if_current_file_exists,
     write_text_file,
     read_text_file,

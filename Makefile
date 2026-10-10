@@ -44,7 +44,7 @@ check-security:
 	@uv run bandit -c pyproject.toml -r .
 
 mypy:
-	@uv run mypy temporal_private/
+	@uv run mypy easy_time_tracker/
 
 pip-export:
 	@uv export --no-dev --no-emit-project --no-editable > requirements.txt

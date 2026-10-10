@@ -3,8 +3,8 @@ easy_time_tracker CLI
 """
 
 from argparse import ArgumentParser
-from .easy_time_tracker import EasyTimeTracker
-from .gui import ett_gui
+from easy_time_tracker.easy_time_tracker import EasyTimeTracker
+from easy_time_tracker.gui import ett_gui
 
 
 def cli() -> None:  # pragma: no cover
