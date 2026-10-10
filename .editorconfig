@@ -12,16 +12,20 @@ insert_final_newline = true
 [*.{js,py}]
 charset = utf-8
 
-# Set indent style for Python, JSON, and YAML
-[*.{yml,yaml,py,json}]
+# Set indent style for Python, JSON
+[*.{py,json}]
 indent_style = space
 indent_size = 4
 
-# Set indent style for XML and YANG
-[*.{xml,yang}]
+# Set indent style for XML, YANG, YAML
+[*.{xml,yang,yml,yaml}]
 indent_style = space
 indent_size = 2
 
 # Set indent style for Makefile
 [Makefile]
 indent_style = tab
+
+# Do not insert new line in file
+[*.{j2,jinja2,json}]
+insert_final_newline = false

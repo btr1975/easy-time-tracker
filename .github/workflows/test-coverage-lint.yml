@@ -4,47 +4,103 @@
 name: Unit-Testing, Coverage, Linting
 
 on:
-    push:
-        branches:
-            - main
-            - develop
-            - feature/*
-            - bug/*
-    pull_request:
-        branches:
-            - main
-            - develop
-            - feature/*
-            - bug/*
+  push:
+    branches:
+      - main
+      - develop
+      - feature/*
+      - bug/*
+  pull_request:
+    branches:
+      - main
+      - develop
+      - feature/*
+      - bug/*
 
 jobs:
-    build:
+  linting:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
+        os:
+          - ubuntu-latest
 
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                python-version:
-                    - "3.10"
-                    - "3.11"
-                    - "3.12"
-                    - "3.13"
-                    - "3.14"
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install UV
+      run: |
+        pip install uv
+    - name: Run Linting
+      run: |
+        make pylint
 
-        steps:
-            -   uses: actions/checkout@v2
-            -   name: Set up Python ${{ matrix.python-version }}
-                uses: actions/setup-python@v2
-                with:
-                    python-version: ${{ matrix.python-version }}
-            -   name: Install dependencies
-                run: |
-                    python -m pip install --upgrade pip setuptools wheel
-                    if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-            -   name: Test with pytest and coverage
-                run: |
-                    coverage erase
-                    coverage run
-                    coverage report
-            -   name: Lint with pylint
-                run: |
-                    pylint ./easy_time_tracker
+  testing-coverage:
+    needs: linting
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install UV
+        run: |
+          pip install uv
+      - name: Run Unit-Testing and Coverage
+        run: |
+          make coverage
+
+  build:
+    needs: testing-coverage
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install UV
+        run: |
+          pip install uv
+      - name: Run Build
+        run: |
+          make build
