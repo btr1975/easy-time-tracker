@@ -9,7 +9,7 @@ from easy_time_tracker.easy_time_tracker import EasyTimeTracker
 
 class ProjectsFrame(tk.Frame):
 
-    def __init__(self, master: tk.Tk) -> None:
+    def __init__(self, master: tk.Misc) -> None:
         self._client = EasyTimeTracker()
         super().__init__(master)
         self.master = master
@@ -95,6 +95,30 @@ class ProjectsFrame(tk.Frame):
             table.insert("", tk.END, values=row)
 
         table.grid(row=placement_row, columnspan=5, padx=1, pady=4)
+
+
+class MainFrame(tk.Frame):
+
+    def __init__(self, master: tk.Tk) -> None:
+        self._client = EasyTimeTracker()
+        super().__init__(master)
+        self.master = master
+        self.pack(padx=25, pady=25)
+        self._font = ("Courier", 14)
+
+        self.create_start_button()
+
+        self.projects_frame: None | ProjectsFrame = None
+
+    def start_button_callback(self):
+        if self.projects_frame is None:
+            self.projects_frame = ProjectsFrame(master=self)
+
+    def create_start_button(self) -> None:
+        button = tk.Button(self, height=2, width=80, bg="green", font=self._font)
+        button["text"] = "START"
+        button["command"] = self.start_button_callback
+        button.pack(side="top")
 
 
 class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
@@ -313,5 +337,5 @@ def ett_gui() -> None:
     root = tk.Tk()
     root.title("Easy Time Tracker")
     # root.geometry("600x400")
-    app = ProjectsFrame(master=root)
+    app = MainFrame(master=root)
     app.mainloop()
