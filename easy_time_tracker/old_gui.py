@@ -2,10 +2,8 @@
 A simple GUI
 """
 
-from typing import Any
 import tkinter as tk
-from tkinter import messagebox, ttk
-from pydantic import BaseModel
+from tkinter import messagebox
 from easy_time_tracker.easy_time_tracker import EasyTimeTracker
 
 
