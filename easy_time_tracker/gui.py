@@ -3,10 +3,98 @@ A simple GUI
 """
 
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 from easy_time_tracker.easy_time_tracker import EasyTimeTracker
-from easy_time_tracker.constants import EASY_TIME_TRACKER_PROJECT_LIST
-from easy_time_tracker.util.file_read_write import check_if_current_file_exists, read_text_file
+
+
+class ProjectsFrame(tk.Frame):
+
+    def __init__(self, master: tk.Tk) -> None:
+        self._client = EasyTimeTracker()
+        super().__init__(master)
+        self.master = master
+        self.pack(padx=25, pady=25)
+        self._font = ("Helvetica", 14)
+
+        self.project_dropdown_clicked = None
+        self.project_description_text = ""
+
+        projects = []
+        for project in self._client.find_projects():
+            projects.append(project.name)
+
+        if len(projects) >= 1:
+            self.projects_dropdown(projects=projects)
+
+        self.project_description_text_box()
+
+    def project_dropdown_callback(self, name: str) -> None:
+        project = self._client.find_projects(name=name)[0]
+        self.project_description_text = project.description
+        self.project_description_text_box()
+
+        people_headers = []
+        people_data = []
+        for index, person in enumerate(project.people):
+            if index == 0:
+                people_headers.extend(list(person.model_dump().keys()))
+
+            people_data.append(list(person.model_dump().values()))
+
+        self.table(placement_row=2, headers=people_headers, data=people_data)
+
+        tickets_headers = []
+        tickets_data = []
+        for index, person in enumerate(project.tickets):
+            if index == 0:
+                tickets_headers.extend(list(person.model_dump().keys()))
+
+            tickets_data.append(list(person.model_dump().values()))
+
+        notes_headers = []
+        notes_data = []
+        for index, person in enumerate(project.notes):
+            if index == 0:
+                notes_headers.extend(list(person.model_dump().keys()))
+
+            notes_data.append(list(person.model_dump().values()))
+
+        self.table(placement_row=4, headers=notes_headers, data=notes_data)
+
+    def projects_dropdown(self, projects: list) -> None:
+        label = tk.Label(self, font=self._font)
+        label["text"] = "Project"
+        label.grid(row=0, column=0, padx=10, pady=10)
+
+        # datatype of menu text
+        self.project_dropdown_clicked = tk.StringVar()
+        # initial menu text
+        self.project_dropdown_clicked.set("NA")
+
+        dropdown = tk.OptionMenu(self, self.project_dropdown_clicked, *projects, command=self.project_dropdown_callback)
+        dropdown.grid(row=0, column=1, padx=10, pady=10)
+
+    def project_description_text_box(self) -> None:
+        label = tk.Label(self, font=self._font)
+        label["text"] = "Description"
+        label.grid(row=1, column=0, padx=10, pady=10)
+        text_box = tk.Entry(self, width=120)
+        text_box.insert(tk.END, self.project_description_text)
+        text_box.grid(row=1, column=1, padx=10, pady=10)
+
+    def table(self, placement_row: int, headers: list[str], data: list) -> None:
+        table = ttk.Treeview(self, columns=headers, show="headings")
+
+        # Define headings and column layouts
+        for col in headers:
+            table.heading(col, text=col)
+            table.column(col, anchor="center", width=250)
+
+        # Insert data rows
+        for row in data:
+            table.insert("", tk.END, values=row)
+
+        table.grid(row=placement_row, columnspan=5, padx=10, pady=10)
 
 
 class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
@@ -21,6 +109,8 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
     stop_group = []
 
     def __init__(self, master: tk.Tk) -> None:
+        self._client = EasyTimeTracker()
+
         super().__init__(master)
         self.master = master
         self.pack(padx=25, pady=25)
@@ -37,10 +127,13 @@ class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
         self.project_dropdown_clicked = None
         self.create_description_text_box()
         self.create_people_text_box()
-        if check_if_current_file_exists(EASY_TIME_TRACKER_PROJECT_LIST):
-            projects = read_text_file(EASY_TIME_TRACKER_PROJECT_LIST).splitlines()
-            if len(projects) >= 1:
-                self.create_project_dropdown(projects)
+
+        projects = []
+        for project in self._client.find_projects():
+            projects.append(project.name)
+
+        if len(projects) >= 1:
+            self.create_project_dropdown(projects)
         self.create_comments_text_box()
         self.create_stop_button()
         self.create_start_button()
@@ -218,5 +311,7 @@ def ett_gui() -> None:
     :returns: Nothing
     """
     root = tk.Tk()
-    app = Gui(master=root)
+    root.title("Easy Time Tracker")
+    root.geometry("600x600")
+    app = ProjectsFrame(master=root)
     app.mainloop()
