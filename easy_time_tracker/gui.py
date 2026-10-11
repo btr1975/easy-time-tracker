@@ -14,7 +14,7 @@ class ProjectsFrame(tk.Frame):
         super().__init__(master)
         self.master = master
         self.pack(padx=25, pady=25)
-        self._font = ("Helvetica", 14)
+        self._font = ("Courier", 14)
 
         self.project_dropdown_clicked = None
         self.project_description_text = ""
@@ -64,7 +64,7 @@ class ProjectsFrame(tk.Frame):
     def projects_dropdown(self, projects: list) -> None:
         label = tk.Label(self, font=self._font)
         label["text"] = "Project"
-        label.grid(row=0, column=0, padx=10, pady=10)
+        label.grid(row=0, column=0, padx=1, pady=1)
 
         # datatype of menu text
         self.project_dropdown_clicked = tk.StringVar()
@@ -72,15 +72,15 @@ class ProjectsFrame(tk.Frame):
         self.project_dropdown_clicked.set("NA")
 
         dropdown = tk.OptionMenu(self, self.project_dropdown_clicked, *projects, command=self.project_dropdown_callback)
-        dropdown.grid(row=0, column=1, padx=10, pady=10)
+        dropdown.grid(row=0, column=1, padx=1, pady=1)
 
     def project_description_text_box(self) -> None:
         label = tk.Label(self, font=self._font)
         label["text"] = "Description"
-        label.grid(row=1, column=0, padx=10, pady=10)
+        label.grid(row=1, column=0, padx=1, pady=1)
         text_box = tk.Entry(self, width=120)
         text_box.insert(tk.END, self.project_description_text)
-        text_box.grid(row=1, column=1, padx=10, pady=10)
+        text_box.grid(row=1, column=1, padx=1, pady=1)
 
     def table(self, placement_row: int, headers: list[str], data: list) -> None:
         table = ttk.Treeview(self, columns=headers, show="headings")
@@ -88,13 +88,13 @@ class ProjectsFrame(tk.Frame):
         # Define headings and column layouts
         for col in headers:
             table.heading(col, text=col)
-            table.column(col, anchor="center", width=250)
+            table.column(col, anchor="center", width=200)
 
         # Insert data rows
         for row in data:
             table.insert("", tk.END, values=row)
 
-        table.grid(row=placement_row, columnspan=5, padx=10, pady=10)
+        table.grid(row=placement_row, columnspan=5, padx=1, pady=4)
 
 
 class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
@@ -312,6 +312,6 @@ def ett_gui() -> None:
     """
     root = tk.Tk()
     root.title("Easy Time Tracker")
-    root.geometry("600x600")
+    # root.geometry("600x400")
     app = ProjectsFrame(master=root)
     app.mainloop()
