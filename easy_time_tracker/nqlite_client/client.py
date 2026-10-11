@@ -6,6 +6,7 @@ from typing import Optional, Any
 from neosqlite import Connection
 from neosqlite.collection import Collection, Cursor, AggregationCursor
 from neosqlite.collection import InsertOneResult, DeleteResult, UpdateResult
+from easy_time_tracker.util.schemas import Person, get_current_datetime
 
 
 class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
@@ -44,6 +45,17 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
         """
         return self.get_database().list_collections()
 
+    def get_current_collections_names(self) -> list[str]:
+        """Get the names of the current collections in the database
+
+        :returns: The current collections names
+        """
+        names = []
+        for collection in self.get_collections_list():
+            names.append(collection["name"])
+
+        return names
+
     def get_collection(self, collection_name: str) -> Collection:
         """Method to get a collection
 
@@ -51,6 +63,9 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
 
         :returns: The collection
         """
+        if collection_name not in self.get_current_collections_names():
+            self.get_database().create_collection(name=collection_name)
+
         return self.get_database().get_collection(name=collection_name)
 
     def create_document(self, collection_name: str, document_data: dict) -> InsertOneResult:
@@ -69,7 +84,7 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
         :param collection_name: The name of the collection
         :param data_filter: The filter data
 
-        :returns: The response from mongo
+        :returns: The response from neosqlite
 
         :raises ValueError: If collection name is not set in class
         """
@@ -87,11 +102,11 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
 
         :param collection_name: The name of the collection
         :param data_filter: The filter data
-        :param projection: The mongo projection
+        :param projection: The neosqlite projection
         :param skip: The number of documents to skip
         :param limit: The number of documents to limit
 
-        :returns: The response from mongo
+        :returns: The response from neosqlite
 
         :raises ValueError: If collection name is not set in class
         """
@@ -106,9 +121,9 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
 
         :param collection_name: The name of the collection
         :param data_filter: The filter data
-        :param projection: The mongo projection
+        :param projection: The neosqlite projection
 
-        :returns: The response from mongo
+        :returns: The response from neosqlite
 
         :raises ValueError: If collection name is not set in class
         """
@@ -124,7 +139,7 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
         :param update_data: The data to update
         :param upsert: Set False to not use upsert
 
-        :returns: The response from mongo
+        :returns: The response from neosqlite
 
         :raises ValueError: If collection name is not set in class
         """
@@ -170,6 +185,63 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
         :param collection_name: The name of the collection
         :param pipeline: The aggregation pipeline
 
-        :returns: The response from mongo
+        :returns: The response from neosqlite
         """
         return self.get_collection(collection_name=collection_name).aggregate(pipeline=pipeline)
+
+    def create_person(self, document: Person) -> InsertOneResult:
+        """Create a new person in the people collection
+
+        :param document: The document to create
+
+        :returns: The response from neosqlite
+
+        :raises TypeError: If the document is not a Person
+        """
+        if not isinstance(document, Person):
+            raise TypeError(f"'document' must be of type Person, not {type(document)}")
+
+        return self.get_collection(collection_name=self._people_collection).insert_one(document=document.model_dump())
+
+    def get_people(
+        self,
+        data_filter: Optional[dict] = None,
+        projection: Optional[dict] = None,
+        skip: Optional[int] = 0,
+        limit: Optional[int] = 0,
+    ) -> Cursor:
+        """Get people in the people collection
+
+        :returns: The cursor
+        """
+        this_projection = {"_id": False}
+
+        if projection:
+            this_projection.update(projection)
+
+        return self.find_documents(
+            collection_name=self._people_collection,
+            data_filter=data_filter,
+            projection=this_projection,
+            skip=skip,
+            limit=limit,
+        )
+
+    def update_person(
+        self,
+        data_filter: dict[Any, Any],
+        update_data: dict[Any, Any],
+    ) -> UpdateResult:
+        """Update a person in the people collection
+
+        :returns: The cursor
+        """
+        this_update = {"modified": get_current_datetime()}
+        this_update.update(update_data)
+
+        return self.update_one_document(
+            collection_name=self._people_collection,
+            data_filter=data_filter,
+            update_data={"$set": this_update},
+            upsert=True,
+        )

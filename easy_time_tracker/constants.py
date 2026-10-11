@@ -5,6 +5,9 @@ Constants for easy_time_tracker
 import os
 from pathlib import Path
 
+STRING_NO_SPACES = r"^\S+$"
+STRING_NO_SPACES_BEGIN_OR_END = r"^\S.*\S$"
+
 # The absolute path to the easy-time-tracker directory
 EASY_TIME_TRACKER_BASE_PATH = os.path.split(os.path.split(os.path.abspath(__file__))[0])[0]
 # The name to use for the current record
