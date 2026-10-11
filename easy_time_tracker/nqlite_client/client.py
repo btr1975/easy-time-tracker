@@ -5,12 +5,14 @@ NeoSQLLite client
 from typing import Optional, Any
 from pathlib import Path
 
-from neosqlite import Connection
+from neosqlite import Connection, ASCENDING
 from neosqlite.collection import Collection, Cursor, AggregationCursor
 from neosqlite.collection import InsertOneResult, DeleteResult, UpdateResult
 from easy_time_tracker.util.schemas import Person, get_current_datetime, Project
 
 from easy_time_tracker.constants import EASY_TIME_TRACKER_DATABASE_PATH
+
+type Constraint = dict[str, dict[str, dict[str, dict[str, Any]]]]
 
 
 class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
@@ -29,6 +31,13 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
         self._database_name = "easy_time_tracker"
         self._projects_collection = "projects"
         self._people_collection = "people"
+
+        self.get_collection(self._projects_collection).create_index(
+            [("name", ASCENDING), ("description", ASCENDING)], unique=True
+        )
+        self.get_collection(self._people_collection).create_index(
+            [("last_name", ASCENDING), ("first_name", ASCENDING), ("middle_name", ASCENDING)], unique=True
+        )
 
     def get_database(self) -> Connection:
         """Method to get the database
@@ -314,6 +323,15 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
         return self.update_one_document(
             collection_name=self._projects_collection,
             data_filter=data_filter,
-            update_data={"$set": this_update},
+            update_data={"$addToSet": this_update},
             upsert=True,
         )
+
+    def delete_project(self, data_filter: dict[Any, Any]) -> DeleteResult:
+        """Delete a project in the projects collection
+
+        :param data_filter: The filter data
+
+        :returns: The result
+        """
+        return self.delete_one_document(collection_name=self._projects_collection, data_filter=data_filter)

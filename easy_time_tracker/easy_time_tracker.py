@@ -4,7 +4,7 @@ easy_time_tracker
 
 from easy_time_tracker.nqlite_client import NeoSQLiteClient
 from neosqlite import UpdateResult, DeleteResult, InsertOneResult
-from easy_time_tracker.util.schemas import Person, Project
+from easy_time_tracker.util.schemas import Person, Project, Note, Ticket
 
 
 class EasyTimeTracker:
@@ -59,3 +59,49 @@ class EasyTimeTracker:
         :returns: Result
         """
         return self._client.delete_person(data_filter={"first_name": first_name, "last_name": last_name})
+
+    def create_project(self, name: str, description: str) -> InsertOneResult:
+        """Create a new project
+
+        :param name: The project name
+        :param description: The project description
+
+        :returns: Result
+        """
+        return self._client.create_project(document=Project(name=name, description=description))
+
+    def find_projects(self, **kwargs) -> list[Project]:
+        """Find projects
+
+        :param kwargs: Keyword arguments
+
+        :returns: Result
+        """
+        return self._client.get_projects(data_filter=kwargs)
+
+    def delete_project(self, name: str, description: str) -> DeleteResult:
+        """Delete a person
+
+        :param name: The project name
+        :param description: The project description
+
+        :returns: Result
+        """
+        return self._client.delete_project(data_filter={"name": name, "description": description})
+
+    def add_person_to_project(self, name: str, description: str, person: Person) -> UpdateResult:
+        return self._client.update_project(
+            data_filter={"name": name, "description": description}, update_data={"people": person.model_dump()}
+        )
+
+    def add_note_to_project(self, name: str, description: str, note: str) -> UpdateResult:
+        this_note = Note(note=note)
+        return self._client.update_project(
+            data_filter={"name": name, "description": description}, update_data={"notes": this_note.model_dump()}
+        )
+
+    def add_ticket_to_project(self, name: str, description: str, ticket_id: str) -> UpdateResult:
+        this_ticket = Ticket(ticket_id=ticket_id)
+        return self._client.update_project(
+            data_filter={"name": name, "description": description}, update_data={"tickets": this_ticket.model_dump()}
+        )

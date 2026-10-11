@@ -3,7 +3,6 @@ Data schemas
 """
 
 import datetime
-from typing import List, Optional
 from pydantic import BaseModel, Field, ConfigDict  # pylint: disable=no-name-in-module
 from easy_time_tracker.constants import STRING_NO_SPACES, STRING_NO_SPACES_BEGIN_OR_END
 
@@ -53,5 +52,13 @@ class Project(CommonRecord):
     name: str = Field(description="Project name", pattern=STRING_NO_SPACES_BEGIN_OR_END)
     description: str = Field(description="Project description", pattern=STRING_NO_SPACES_BEGIN_OR_END)
     complete: bool = Field(description="Completed", default=False)
-    people: List[Person] = Field(description="People", default=[])
-    notes: List[Note] = Field(description="Notes", default=[])
+    people: list[Person] = Field(description="People", default=[])
+    tickets: list[Ticket] = Field(description="Tickets", default=[])
+    notes: list[Note] = Field(description="Notes", default=[])
+
+
+class WeeklyUpdates(CommonRecord):
+    """Weekly Updates Schema"""
+
+    worked_on: str = Field(description="Worked on", pattern=STRING_NO_SPACES_BEGIN_OR_END)
+    benefit_to_company: str = Field(description="Benefit to company", pattern=STRING_NO_SPACES_BEGIN_OR_END)
