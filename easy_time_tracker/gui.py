@@ -2,13 +2,18 @@
 A simple GUI
 """
 
+from typing import Any
 import tkinter as tk
 from tkinter import messagebox, ttk
+from pydantic import BaseModel
 from easy_time_tracker.easy_time_tracker import EasyTimeTracker
 
 
 class ProjectsFrame(tk.Frame):
-    """The Projects Frame"""
+    """The Projects Frame
+
+    :param master: The master widget
+    """
 
     def __init__(self, master: tk.Misc) -> None:
         self._client = EasyTimeTracker()
@@ -39,37 +44,20 @@ class ProjectsFrame(tk.Frame):
         return projects
 
     def project_dropdown_callback(self, name: str) -> None:
+        """Callback for the project dropdown
+
+        :param name: The name of the project
+
+        :returns: Nothing
+        """
         project = self._client.find_projects(name=name)[0]
+
         self.project_description_text = project.description
         self.project_description_text_box()
 
-        people_headers = []
-        people_data = []
-        for index, person in enumerate(project.people):
-            if index == 0:
-                people_headers.extend(list(person.model_dump().keys()))
-
-            people_data.append(list(person.model_dump().values()))
-
-        self.table(placement_row=2, headers=people_headers, data=people_data)
-
-        tickets_headers = []
-        tickets_data = []
-        for index, person in enumerate(project.tickets):
-            if index == 0:
-                tickets_headers.extend(list(person.model_dump().keys()))
-
-            tickets_data.append(list(person.model_dump().values()))
-
-        notes_headers = []
-        notes_data = []
-        for index, person in enumerate(project.notes):
-            if index == 0:
-                notes_headers.extend(list(person.model_dump().keys()))
-
-            notes_data.append(list(person.model_dump().values()))
-
-        self.table(placement_row=4, headers=notes_headers, data=notes_data)
+        self.create_table(placement_row=2, data=project.people)
+        self.create_table(placement_row=3, data=project.tickets)
+        self.create_table(placement_row=4, data=project.notes)
 
     def projects_dropdown(self, projects: list) -> None:
         """The projects dropdown selector
@@ -102,22 +90,106 @@ class ProjectsFrame(tk.Frame):
         text_box.insert(tk.END, self.project_description_text)
         text_box.grid(row=1, column=1, padx=1, pady=1)
 
-    def table(self, placement_row: int, headers: list[str], data: list) -> None:
+    def create_table(self, placement_row: int, data: list[BaseModel]) -> None:
+        """Create a table
+
+        :param placement_row: The placement row of the table
+        :param data: The data for the table
+
+        :returns: Nothing
+        """
+        headers = []
+        columns = []
+        for index, model in enumerate(data):
+            if index == 0:
+                headers.extend(list(model.model_dump().keys()))
+
+            columns.append(list(model.model_dump().values()))
+
+        self.table(placement_row=placement_row, headers=headers, columns=columns)
+
+    def table(self, placement_row: int, headers: list[str], columns: list[list[Any]]) -> None:
+        """Table GUI object
+
+        :param placement_row: The placement row of the table
+        :param headers: The headers of the table
+        :param columns: The columns of the table
+
+        :returns: Nothing
+        """
+        column_span = len(headers) + 1
         table = ttk.Treeview(self, columns=headers, show="headings")
 
-        # Define headings and column layouts
         for col in headers:
             table.heading(col, text=col)
             table.column(col, anchor="center", width=200)
 
-        # Insert data rows
-        for row in data:
+        for row in columns:
             table.insert("", tk.END, values=row)
 
-        table.grid(row=placement_row, columnspan=5, padx=1, pady=4)
+        table.grid(row=placement_row, columnspan=column_span, padx=1, pady=4)
+
+
+class MainButtons(tk.Frame):
+    """Main Buttons Frame
+
+    :param master: The tkinter object
+    """
+
+    def __init__(self, master: tk.Misc) -> None:
+        super().__init__(master)
+        self.master = master
+        self.pack(padx=25, pady=25)
+        self._font = ("Courier", 14)
+
+        self.projects_button()
+        self.other_button()
+
+        self.projects_frame: None | ProjectsFrame = None
+
+    def projects_button_command_callback(self):
+        """Callback for the projects button
+
+        :returns: Nothing
+        """
+        if self.projects_frame is None:
+            self.projects_frame = ProjectsFrame(master=self)
+
+    def clear_projects_frame_callback(self) -> None:
+        """Callback to destroy the projects frame
+
+        :returns: Nothing
+        """
+        if self.projects_frame is not None:
+            self.projects_frame.destroy()
+            self.projects_frame = None
+
+    def projects_button(self) -> None:
+        """The projects button
+
+        :returns: Nothing
+        """
+        button = tk.Button(self, height=1, width=10, font=self._font, name="projects_button")
+        button["text"] = "Projects"
+        button["command"] = self.projects_button_command_callback
+        button.pack(side="top")
+
+    def other_button(self) -> None:
+        """The other button
+
+        :returns: Nothing
+        """
+        button = tk.Button(self, height=1, width=10, bg="green", font=self._font, name="other_button")
+        button["text"] = "OTHER"
+        button["command"] = self.clear_projects_frame_callback
+        button.pack(side="top")
 
 
 class MainFrame(tk.Frame):
+    """The Main application frame
+
+    :param master: The tkinter object
+    """
 
     def __init__(self, master: tk.Tk) -> None:
         self._client = EasyTimeTracker()
@@ -126,31 +198,7 @@ class MainFrame(tk.Frame):
         self.pack(padx=25, pady=25)
         self._font = ("Courier", 14)
 
-        self.start_button()
-        self.other_button()
-
-        self.projects_frame: None | ProjectsFrame = None
-
-    def start_button_callback(self):
-        if self.projects_frame is None:
-            self.projects_frame = ProjectsFrame(master=self)
-
-    def clear_projects_frame(self) -> None:
-        if self.projects_frame is not None:
-            self.projects_frame.destroy()
-            self.projects_frame = None
-
-    def start_button(self) -> None:
-        button = tk.Button(self, height=1, width=10, bg="green", font=self._font, name="start_button")
-        button["text"] = "START"
-        button["command"] = self.start_button_callback
-        button.pack(side="top")
-
-    def other_button(self) -> None:
-        button = tk.Button(self, height=1, width=10, bg="green", font=self._font, name="other_button")
-        button["text"] = "OTHER"
-        button["command"] = self.clear_projects_frame
-        button.pack(side="top")
+        MainButtons(master=self)
 
 
 class Gui(tk.Frame):  # pylint: disable=too-many-instance-attributes
