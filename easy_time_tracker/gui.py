@@ -8,9 +8,11 @@ from easy_time_tracker.easy_time_tracker import EasyTimeTracker
 
 
 class ProjectsFrame(tk.Frame):
+    """The Projects Frame"""
 
     def __init__(self, master: tk.Misc) -> None:
         self._client = EasyTimeTracker()
+
         super().__init__(master)
         self.master = master
         self.pack(padx=25, pady=25)
@@ -19,14 +21,22 @@ class ProjectsFrame(tk.Frame):
         self.project_dropdown_clicked = None
         self.project_description_text = ""
 
-        projects = []
-        for project in self._client.find_projects():
-            projects.append(project.name)
-
+        projects = self.get_projects_names_list()
         if len(projects) >= 1:
             self.projects_dropdown(projects=projects)
 
         self.project_description_text_box()
+
+    def get_projects_names_list(self) -> list[str]:
+        """Get the project names
+
+        :returns: The project names
+        """
+        projects = []
+        for project in self._client.find_projects():
+            projects.append(project.name)
+
+        return projects
 
     def project_dropdown_callback(self, name: str) -> None:
         project = self._client.find_projects(name=name)[0]
@@ -62,6 +72,12 @@ class ProjectsFrame(tk.Frame):
         self.table(placement_row=4, headers=notes_headers, data=notes_data)
 
     def projects_dropdown(self, projects: list) -> None:
+        """The projects dropdown selector
+
+        :param projects: The project names
+
+        :returns: Nothing
+        """
         label = tk.Label(self, font=self._font)
         label["text"] = "Project"
         label.grid(row=0, column=0, padx=1, pady=1)
@@ -75,6 +91,10 @@ class ProjectsFrame(tk.Frame):
         dropdown.grid(row=0, column=1, padx=1, pady=1)
 
     def project_description_text_box(self) -> None:
+        """The project description text box
+
+        :returns: Nothing
+        """
         label = tk.Label(self, font=self._font)
         label["text"] = "Description"
         label.grid(row=1, column=0, padx=1, pady=1)
@@ -106,7 +126,8 @@ class MainFrame(tk.Frame):
         self.pack(padx=25, pady=25)
         self._font = ("Courier", 14)
 
-        self.create_start_button()
+        self.start_button()
+        self.other_button()
 
         self.projects_frame: None | ProjectsFrame = None
 
@@ -114,10 +135,21 @@ class MainFrame(tk.Frame):
         if self.projects_frame is None:
             self.projects_frame = ProjectsFrame(master=self)
 
-    def create_start_button(self) -> None:
-        button = tk.Button(self, height=2, width=80, bg="green", font=self._font)
+    def clear_projects_frame(self) -> None:
+        if self.projects_frame is not None:
+            self.projects_frame.destroy()
+            self.projects_frame = None
+
+    def start_button(self) -> None:
+        button = tk.Button(self, height=1, width=10, bg="green", font=self._font, name="start_button")
         button["text"] = "START"
         button["command"] = self.start_button_callback
+        button.pack(side="top")
+
+    def other_button(self) -> None:
+        button = tk.Button(self, height=1, width=10, bg="green", font=self._font, name="other_button")
+        button["text"] = "OTHER"
+        button["command"] = self.clear_projects_frame
         button.pack(side="top")
 
 
