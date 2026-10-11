@@ -90,17 +90,41 @@ class EasyTimeTracker:
         return self._client.delete_project(data_filter={"name": name, "description": description})
 
     def add_person_to_project(self, name: str, description: str, person: Person) -> UpdateResult:
+        """Add a person to a project
+
+        :param name: The project name
+        :param description: The project description
+        :param person: Person
+
+        :returns: Result
+        """
         return self._client.update_project(
             data_filter={"name": name, "description": description}, update_data={"people": person.model_dump()}
         )
 
     def add_note_to_project(self, name: str, description: str, note: str) -> UpdateResult:
+        """Add a note to a project
+
+        :param name: The project name
+        :param description: The project description
+        :param note: Note
+
+        :returns: Result
+        """
         this_note = Note(note=note)
         return self._client.update_project(
             data_filter={"name": name, "description": description}, update_data={"notes": this_note.model_dump()}
         )
 
     def add_ticket_to_project(self, name: str, description: str, ticket_id: str) -> UpdateResult:
+        """Add a ticket to a project
+
+        :param name: The project name
+        :param description: The project description
+        :param ticket_id: Ticket
+
+        :returns: Result
+        """
         this_ticket = Ticket(ticket_id=ticket_id)
         return self._client.update_project(
             data_filter={"name": name, "description": description}, update_data={"tickets": this_ticket.model_dump()}
