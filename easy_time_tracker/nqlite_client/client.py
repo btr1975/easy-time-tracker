@@ -3,22 +3,28 @@ NeoSQLLite client
 """
 
 from typing import Optional, Any
+from pathlib import Path
+
 from neosqlite import Connection
 from neosqlite.collection import Collection, Cursor, AggregationCursor
 from neosqlite.collection import InsertOneResult, DeleteResult, UpdateResult
-from easy_time_tracker.util.schemas import Person, get_current_datetime
+from easy_time_tracker.util.schemas import Person, get_current_datetime, Project
+
+from easy_time_tracker.constants import EASY_TIME_TRACKER_DATABASE_PATH
 
 
 class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
     """NeoSQLite client
 
-    :param neosqlite_connection: The neosqlite connection
-
     :returns: Nothing it creates a client
     """
 
-    def __init__(self, neosqlite_connection: Connection) -> None:
-        self._client = neosqlite_connection
+    def __init__(self) -> None:
+        self._database_path = (
+            Path(EASY_TIME_TRACKER_DATABASE_PATH).joinpath("easy-time-tracker.db").resolve().as_posix()
+        )
+
+        self._client = Connection(self._database_path)
 
         self._database_name = "easy_time_tracker"
         self._projects_collection = "projects"
@@ -194,7 +200,7 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
 
         :param document: The document to create
 
-        :returns: The response from neosqlite
+        :returns: The result
 
         :raises TypeError: If the document is not a Person
         """
@@ -206,26 +212,26 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
     def get_people(
         self,
         data_filter: Optional[dict] = None,
-        projection: Optional[dict] = None,
         skip: Optional[int] = 0,
         limit: Optional[int] = 0,
-    ) -> Cursor:
+    ) -> list[Person]:
         """Get people in the people collection
 
-        :returns: The cursor
+        :returns: The data
         """
+        found = []
         this_projection = {"_id": False}
 
-        if projection:
-            this_projection.update(projection)
-
-        return self.find_documents(
+        for person in self.find_documents(
             collection_name=self._people_collection,
             data_filter=data_filter,
             projection=this_projection,
             skip=skip,
             limit=limit,
-        )
+        ):
+            found.append(Person(**person))
+
+        return found
 
     def update_person(
         self,
@@ -234,13 +240,79 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
     ) -> UpdateResult:
         """Update a person in the people collection
 
-        :returns: The cursor
+        :returns: The result
         """
         this_update = {"modified": get_current_datetime()}
         this_update.update(update_data)
 
         return self.update_one_document(
             collection_name=self._people_collection,
+            data_filter=data_filter,
+            update_data={"$set": this_update},
+            upsert=True,
+        )
+
+    def delete_person(self, data_filter: dict[Any, Any]) -> DeleteResult:
+        """Delete a person in the people collection
+
+        :param data_filter: The filter data
+
+        :returns: The result
+        """
+        return self.delete_one_document(collection_name=self._people_collection, data_filter=data_filter)
+
+    def create_project(self, document: Project) -> InsertOneResult:
+        """Create a new project in the projects collection
+
+        :param document: The document to create
+
+        :returns: The result
+
+        :raises TypeError: If the document is not a Person
+        """
+        if not isinstance(document, Project):
+            raise TypeError(f"'document' must be of type Project, not {type(document)}")
+
+        return self.get_collection(collection_name=self._projects_collection).insert_one(document=document.model_dump())
+
+    def get_projects(
+        self,
+        data_filter: Optional[dict] = None,
+        skip: Optional[int] = 0,
+        limit: Optional[int] = 0,
+    ) -> list[Project]:
+        """Get projects in the project collection
+
+        :returns: The data
+        """
+        found = []
+        this_projection = {"_id": False}
+
+        for project in self.find_documents(
+            collection_name=self._projects_collection,
+            data_filter=data_filter,
+            projection=this_projection,
+            skip=skip,
+            limit=limit,
+        ):
+            found.append(Project(**project))
+
+        return found
+
+    def update_project(
+        self,
+        data_filter: dict[Any, Any],
+        update_data: dict[Any, Any],
+    ) -> UpdateResult:
+        """Update a project in the projects collection
+
+        :returns: The result
+        """
+        this_update = {"modified": get_current_datetime()}
+        this_update.update(update_data)
+
+        return self.update_one_document(
+            collection_name=self._projects_collection,
             data_filter=data_filter,
             update_data={"$set": this_update},
             upsert=True,

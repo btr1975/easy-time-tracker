@@ -17,6 +17,7 @@ def get_current_datetime() -> datetime.datetime:
 
 
 class CommonRecord(BaseModel):
+    """Common Record Schema meant to be inherited"""
 
     model_config = ConfigDict(use_enum_values=True)
 
@@ -33,32 +34,24 @@ class Person(CommonRecord):
     email: str | None = Field(description="Email", pattern=STRING_NO_SPACES, default=None)
 
 
+class Note(CommonRecord):
+    """Note Document Schema"""
+
+    note: str = Field(description="Note", pattern=STRING_NO_SPACES_BEGIN_OR_END)
+
+
+class Ticket(CommonRecord):
+    """Ticket Document Schema"""
+
+    ticket_id: str = Field(description="Ticket ID", pattern=STRING_NO_SPACES)
+    complete: bool = Field(description="Completed", default=False)
+
+
 class Project(CommonRecord):
     """Project Document Schema"""
 
     name: str = Field(description="Project name", pattern=STRING_NO_SPACES_BEGIN_OR_END)
     description: str = Field(description="Project description", pattern=STRING_NO_SPACES_BEGIN_OR_END)
-
-
-class StartTimeRecordSchema(BaseModel):  # pylint: disable=too-few-public-methods
-    """Class schema to start a record"""
-
-    description: str
-    people: list
-    project: Optional[str] = Field(default="na")
-    time_zone: str
-    start_time: str
-
-
-class EndTimeRecordSchema(StartTimeRecordSchema):  # pylint: disable=too-few-public-methods
-    """Class schema to end a record"""
-
-    end_time: str
-    ending_comments: Optional[str] = Field(default="no comments added")
-    total_time_worked: str
-
-
-class CompletedTimeRecordsSchema(BaseModel):  # pylint: disable=too-few-public-methods
-    """Class schema for records archive"""
-
-    records: List[EndTimeRecordSchema]
+    complete: bool = Field(description="Completed", default=False)
+    people: List[Person] = Field(description="People", default=[])
+    notes: List[Note] = Field(description="Notes", default=[])
