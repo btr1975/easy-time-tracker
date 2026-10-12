@@ -21,14 +21,15 @@ class PeopleFrame(tk.Frame):
         self.pack(padx=25, pady=25)
         self._font = ("Courier", 14)
 
+        self.people_dropdown_object: tk.OptionMenu | None = None
         self.people_dropdown_clicked = None
-        self.person_first_name_text_box_object = None
+        self.person_first_name_text_box_object: tk.Entry | None = None
         self.person_first_name_text = ""
-        self.person_middle_name_text_box_object = None
+        self.person_middle_name_text_box_object: tk.Entry | None = None
         self.person_middle_name_text = ""
-        self.person_last_name_text_box_object = None
+        self.person_last_name_text_box_object: tk.Entry | None = None
         self.person_last_name_text = ""
-        self.person_email_address_text_box_object = None
+        self.person_email_address_text_box_object: tk.Entry | None = None
         self.person_email_address_text = ""
 
         self.load_people_dropdown()
@@ -47,8 +48,12 @@ class PeopleFrame(tk.Frame):
         :returns: Nothing
         """
         people = self.get_peoples_names_list()
+
         if len(people) >= 1:
             self.people_dropdown(people=people)
+
+        else:
+            self.people_dropdown(people=[])
 
     def get_peoples_names_list(self) -> list[str]:
         """Get the people names
@@ -95,9 +100,18 @@ class PeopleFrame(tk.Frame):
         self.people_dropdown_clicked = tk.StringVar()
         # initial menu text
         self.people_dropdown_clicked.set("NA")
+        if self.people_dropdown_object:
+            self.people_dropdown_object.destroy()
 
-        dropdown = tk.OptionMenu(self, self.people_dropdown_clicked, *people, command=self.people_dropdown_callback)
-        dropdown.grid(row=0, column=1, padx=1, pady=1)
+        if not people:
+            self.people_dropdown_object = tk.OptionMenu(self, self.people_dropdown_clicked, value="")
+
+        else:
+            self.people_dropdown_object = tk.OptionMenu(
+                self, self.people_dropdown_clicked, *people, command=self.people_dropdown_callback
+            )
+
+        self.people_dropdown_object.grid(row=0, column=1, padx=1, pady=1)
 
     def person_first_name_text_box(self) -> None:
         """The person first name text box
@@ -181,6 +195,7 @@ class PeopleFrame(tk.Frame):
             messagebox.showerror(title="Error", message=f"{error}")
 
         self.clear_person_command_callback()
+        self.load_people_dropdown()
 
     def update_person_command_callback(self):
         """Callback for updating a person
@@ -189,10 +204,10 @@ class PeopleFrame(tk.Frame):
         """
         first_name, middle_name, last_name, email_address = self.get_data_from_text_boxes()
 
+        kwargs = {"middle_name": middle_name, "email": email_address}
+
         try:
-            self._client.update_person(
-                first_name=first_name, last_name=last_name, middle_name=middle_name, email=email_address
-            )
+            self._client.update_person(first_name=first_name, last_name=last_name, **kwargs)
 
         except Exception as error:
             messagebox.showerror(title="Error", message=f"{error}")
