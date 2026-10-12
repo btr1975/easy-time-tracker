@@ -42,7 +42,7 @@ class PeopleFrame(tk.Frame):
         """
         people = []
         for project in self._client.find_people():
-            people.append(project.first_name)
+            people.append(f"{project.first_name} {project.last_name}")
 
         return people
 
@@ -53,15 +53,16 @@ class PeopleFrame(tk.Frame):
 
         :returns: Nothing
         """
-        person = self._client.find_people(first_name=name, last_name=name)[0]
+        name_split = name.split(" ")
+        person = self._client.find_people(first_name=name_split[0], last_name=name_split[1])[0]
 
-        self.person_first_name_text = person.first_name
+        self.person_first_name_text = person.first_name or ""
         self.person_first_name_text_box()
-        self.person_middle_name_text = person.middle_name
+        self.person_middle_name_text = person.middle_name or ""
         self.person_middle_name_text_box()
-        self.person_last_name_text = person.last_name
+        self.person_last_name_text = person.last_name or ""
         self.person_last_name_text_box()
-        self.person_email_address_text = person.email
+        self.person_email_address_text = person.email or ""
         self.person_email_address_text_box()
 
     def people_dropdown(self, people: list) -> None:
