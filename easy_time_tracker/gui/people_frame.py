@@ -3,6 +3,7 @@ The People Frame
 """
 
 import tkinter as tk
+from tkinter import messagebox
 from easy_time_tracker.easy_time_tracker import EasyTimeTracker
 
 
@@ -21,19 +22,33 @@ class PeopleFrame(tk.Frame):
         self._font = ("Courier", 14)
 
         self.people_dropdown_clicked = None
+        self.person_first_name_text_box_object = None
         self.person_first_name_text = ""
+        self.person_middle_name_text_box_object = None
         self.person_middle_name_text = ""
+        self.person_last_name_text_box_object = None
         self.person_last_name_text = ""
+        self.person_email_address_text_box_object = None
         self.person_email_address_text = ""
 
-        people = self.get_peoples_names_list()
-        if len(people) >= 1:
-            self.people_dropdown(people=people)
-
+        self.load_people_dropdown()
         self.person_first_name_text_box()
         self.person_middle_name_text_box()
         self.person_last_name_text_box()
         self.person_email_address_text_box()
+        self.clear_person_button()
+        self.create_person_button()
+        self.update_person_button()
+        self.delete_person_button()
+
+    def load_people_dropdown(self) -> None:
+        """Load the people dropdown
+
+        :returns: Nothing
+        """
+        people = self.get_peoples_names_list()
+        if len(people) >= 1:
+            self.people_dropdown(people=people)
 
     def get_peoples_names_list(self) -> list[str]:
         """Get the people names
@@ -92,9 +107,9 @@ class PeopleFrame(tk.Frame):
         label = tk.Label(self, font=self._font)
         label["text"] = "First Name"
         label.grid(row=1, column=0, padx=1, pady=1)
-        text_box = tk.Entry(self, width=120)
-        text_box.insert(tk.END, self.person_first_name_text)
-        text_box.grid(row=1, column=1, padx=1, pady=1)
+        self.person_first_name_text_box_object = tk.Entry(self, width=120)
+        self.person_first_name_text_box_object.insert(tk.END, self.person_first_name_text)
+        self.person_first_name_text_box_object.grid(row=1, column=1, padx=1, pady=1)
 
     def person_middle_name_text_box(self) -> None:
         """The person middle name text box
@@ -104,9 +119,9 @@ class PeopleFrame(tk.Frame):
         label = tk.Label(self, font=self._font)
         label["text"] = "Middle Name"
         label.grid(row=2, column=0, padx=1, pady=1)
-        text_box = tk.Entry(self, width=120)
-        text_box.insert(tk.END, self.person_middle_name_text)
-        text_box.grid(row=2, column=1, padx=1, pady=1)
+        self.person_middle_name_text_box_object = tk.Entry(self, width=120)
+        self.person_middle_name_text_box_object.insert(tk.END, self.person_middle_name_text)
+        self.person_middle_name_text_box_object.grid(row=2, column=1, padx=1, pady=1)
 
     def person_last_name_text_box(self) -> None:
         """The person last name text box
@@ -116,9 +131,9 @@ class PeopleFrame(tk.Frame):
         label = tk.Label(self, font=self._font)
         label["text"] = "Last Name"
         label.grid(row=3, column=0, padx=1, pady=1)
-        text_box = tk.Entry(self, width=120)
-        text_box.insert(tk.END, self.person_last_name_text)
-        text_box.grid(row=3, column=1, padx=1, pady=1)
+        self.person_last_name_text_box_object = tk.Entry(self, width=120)
+        self.person_last_name_text_box_object.insert(tk.END, self.person_last_name_text)
+        self.person_last_name_text_box_object.grid(row=3, column=1, padx=1, pady=1)
 
     def person_email_address_text_box(self) -> None:
         """The person email address text box
@@ -128,6 +143,129 @@ class PeopleFrame(tk.Frame):
         label = tk.Label(self, font=self._font)
         label["text"] = "E-Mail Address"
         label.grid(row=4, column=0, padx=1, pady=1)
-        text_box = tk.Entry(self, width=120)
-        text_box.insert(tk.END, self.person_email_address_text)
-        text_box.grid(row=4, column=1, padx=1, pady=1)
+        self.person_email_address_text_box_object = tk.Entry(self, width=120)
+        self.person_email_address_text_box_object.insert(tk.END, self.person_email_address_text)
+        self.person_email_address_text_box_object.grid(row=4, column=1, padx=1, pady=1)
+
+    def get_data_from_text_boxes(self) -> tuple[str, str | None, str, str | None]:
+        """Get the data from the text boxes
+
+        :returns: first_name, middle_name, last_name, email_address
+        """
+        first_name = self.person_first_name_text_box_object.get()
+        middle_name = self.person_middle_name_text_box_object.get()
+        last_name = self.person_last_name_text_box_object.get()
+        email_address = self.person_email_address_text_box_object.get()
+
+        if not middle_name:
+            middle_name = None
+
+        if not email_address:
+            email_address = None
+
+        return first_name, middle_name, last_name, email_address
+
+    def create_person_command_callback(self):
+        """Callback for creating a person
+
+        :returns: Nothing
+        """
+        first_name, middle_name, last_name, email_address = self.get_data_from_text_boxes()
+
+        try:
+            self._client.create_person(
+                first_name=first_name, middle_name=middle_name, last_name=last_name, email=email_address
+            )
+
+        except Exception as error:
+            messagebox.showerror(title="Error", message=f"{error}")
+
+        self.clear_person_command_callback()
+
+    def update_person_command_callback(self):
+        """Callback for updating a person
+
+        :returns: Nothing
+        """
+        first_name, middle_name, last_name, email_address = self.get_data_from_text_boxes()
+
+        try:
+            self._client.update_person(
+                first_name=first_name, last_name=last_name, middle_name=middle_name, email=email_address
+            )
+
+        except Exception as error:
+            messagebox.showerror(title="Error", message=f"{error}")
+
+        self.clear_person_command_callback()
+        self.load_people_dropdown()
+
+    def delete_person_command_callback(self):
+        """Callback for deleting a person
+
+        :returns: Nothing
+        """
+        first_name, middle_name, last_name, email_address = self.get_data_from_text_boxes()
+
+        try:
+            self._client.delete_person(first_name=first_name, last_name=last_name)
+
+        except Exception as error:
+            messagebox.showerror(title="Error", message=f"{error}")
+
+        self.clear_person_command_callback()
+        self.load_people_dropdown()
+
+    def clear_person_command_callback(self):
+        """Callback for the clear person button
+
+        :returns: Nothing
+        """
+        self.person_first_name_text = ""
+        self.person_first_name_text_box()
+        self.person_middle_name_text = ""
+        self.person_middle_name_text_box()
+        self.person_last_name_text = ""
+        self.person_last_name_text_box()
+        self.person_email_address_text = ""
+        self.person_email_address_text_box()
+
+    def clear_person_button(self) -> None:
+        """The button
+
+        :returns: Nothing
+        """
+        button = tk.Button(self, height=1, width=10, font=self._font, name="clear_person_button")
+        button["text"] = "Clear"
+        button["command"] = self.clear_person_command_callback
+        button.grid(row=5, column=0, padx=1, pady=1)
+
+    def create_person_button(self) -> None:
+        """The button
+
+        :returns: Nothing
+        """
+        button = tk.Button(self, height=1, width=10, font=self._font, name="create_person_button")
+        button["text"] = "Create"
+        button["command"] = self.create_person_command_callback
+        button.grid(row=5, column=1, padx=1, pady=1)
+
+    def update_person_button(self) -> None:
+        """The button
+
+        :returns: Nothing
+        """
+        button = tk.Button(self, height=1, width=10, font=self._font, name="update_person_button")
+        button["text"] = "Update"
+        button["command"] = self.update_person_command_callback
+        button.grid(row=5, column=2, padx=1, pady=1)
+
+    def delete_person_button(self) -> None:
+        """The button
+
+        :returns: Nothing
+        """
+        button = tk.Button(self, height=1, width=10, font=self._font, name="delete_person_button")
+        button["text"] = "Delete"
+        button["command"] = self.delete_person_command_callback
+        button.grid(row=5, column=3, padx=1, pady=1)
