@@ -4,6 +4,7 @@ The Notes Frame
 
 from typing import Callable
 import tkinter as tk
+from tkinter import messagebox
 
 from easy_time_tracker.easy_time_tracker import EasyTimeTracker
 
@@ -60,6 +61,10 @@ class NotesFrame(tk.Frame):
 
         :returns: Nothing
         """
+        if self.note_text_box_object.get() == "":
+            messagebox.showinfo(title="Information", message="Please add a note")
+            return
+
         self._client.add_note_to_project(
             name=self.project, description=self.description, note=self.note_text_box_object.get()
         )

@@ -131,6 +131,7 @@ class ProjectsFrame(tk.Frame):
         :returns: Nothing
         """
         column_span = len(headers) + 1
+
         table = ttk.Treeview(self, columns=headers, show="headings")
 
         for col in headers:
@@ -141,6 +142,9 @@ class ProjectsFrame(tk.Frame):
             table.insert("", tk.END, values=row)
 
         table.grid(row=placement_row, columnspan=column_span, padx=1, pady=4)
+
+        if len(columns) == 0:
+            table.grid_forget()
 
     def add_note_button_command_callback(self) -> None:
         """Add a note to the projects
