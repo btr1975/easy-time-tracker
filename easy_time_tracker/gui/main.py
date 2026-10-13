@@ -18,4 +18,4 @@ class MainFrame(tk.Frame):
         self.pack(padx=25, pady=25)
         self._font = ("Courier", 14)
 
-        MainButtons(master=self)
+        MainButtons(master=self, font=self._font)

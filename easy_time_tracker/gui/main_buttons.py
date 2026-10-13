@@ -13,11 +13,11 @@ class MainButtons(tk.Frame):
     :param master: The tkinter object
     """
 
-    def __init__(self, master: tk.Misc) -> None:
+    def __init__(self, master: tk.Misc, font: tuple[str, int]) -> None:
         super().__init__(master)
         self.master = master
         self.pack(padx=25, pady=25)
-        self._font = ("Courier", 14)
+        self._font = font
 
         self.projects_button_object = tk.Button(self, height=1, width=10, font=self._font)
         self.people_button_object = tk.Button(self, height=1, width=10, font=self._font)
@@ -35,7 +35,7 @@ class MainButtons(tk.Frame):
         """
         self.clear_people_frame_callback()
         if self.projects_frame is None:
-            self.projects_frame = ProjectsFrame(master=self)
+            self.projects_frame = ProjectsFrame(master=self, font=self._font)
 
     def other_button_command_callback(self):
         """Callback for the projects button
@@ -44,7 +44,7 @@ class MainButtons(tk.Frame):
         """
         self.clear_projects_frame_callback()
         if self.people_frame is None:
-            self.people_frame = PeopleFrame(master=self)
+            self.people_frame = PeopleFrame(master=self, font=self._font)
 
     def clear_projects_frame_callback(self) -> None:
         """Callback to destroy the projects frame

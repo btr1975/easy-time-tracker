@@ -15,13 +15,13 @@ class ProjectsFrame(tk.Frame):
     :param master: The master widget
     """
 
-    def __init__(self, master: tk.Misc) -> None:
+    def __init__(self, master: tk.Misc, font: tuple[str, int]) -> None:
         self._client = EasyTimeTracker()
 
         super().__init__(master)
         self.master = master
         self.pack(padx=25, pady=25)
-        self._font = ("Courier", 14)
+        self._font = font
 
         self.projects_dropdown_object: tk.OptionMenu | None = None
 
