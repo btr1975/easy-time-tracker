@@ -57,7 +57,7 @@ class Project(CommonRecord):
     notes: list[Note] = Field(description="Notes", default=[])
 
 
-class WeeklyUpdates(CommonRecord):
+class WeeklyUpdate(CommonRecord):
     """Weekly Updates Schema"""
 
     worked_on: str = Field(description="Worked on", pattern=STRING_NO_SPACES_BEGIN_OR_END)

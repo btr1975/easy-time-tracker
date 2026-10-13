@@ -4,7 +4,7 @@ easy_time_tracker
 
 from easy_time_tracker.nqlite_client import NeoSQLiteClient
 from neosqlite import UpdateResult, DeleteResult, InsertOneResult
-from easy_time_tracker.util.schemas import Person, Project, Note, Ticket
+from easy_time_tracker.util.schemas import Person, Project, Note, Ticket, WeeklyUpdate
 
 
 class EasyTimeTracker:
@@ -129,3 +129,22 @@ class EasyTimeTracker:
         return self._client.update_project(
             data_filter={"name": name, "description": description}, update_data={"tickets": this_ticket.model_dump()}
         )
+
+    def create_weekly_update(self, worked_on: str, benefit_to_company: str) -> InsertOneResult:
+        """Create a weekly update entry
+
+        :param worked_on: The document to create
+        :param benefit_to_company: The benefit to company
+
+        :returns: Result
+        """
+        return self._client.create_weekly_update_entry(worked_on=worked_on, benefit_to_company=benefit_to_company)
+
+    def find_weekly_update(self, **kwargs) -> list[WeeklyUpdate]:
+        """Find weekly updates
+
+        :param kwargs: Keyword arguments
+
+        :returns: Result
+        """
+        return self._client.get_weekly_update_entries(data_filter=kwargs)

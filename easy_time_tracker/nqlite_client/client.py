@@ -8,7 +8,8 @@ from pathlib import Path
 from neosqlite import Connection, ASCENDING
 from neosqlite.collection import Collection, Cursor, AggregationCursor
 from neosqlite.collection import InsertOneResult, DeleteResult, UpdateResult
-from easy_time_tracker.util.schemas import Person, get_current_datetime, Project
+
+from easy_time_tracker.util.schemas import Person, get_current_datetime, Project, WeeklyUpdate
 
 from easy_time_tracker.constants import EASY_TIME_TRACKER_DATABASE_PATH
 
@@ -31,12 +32,16 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
         self._database_name = "easy_time_tracker"
         self._projects_collection = "projects"
         self._people_collection = "people"
+        self._weekly_updates_collection = "weekly_updates"
 
         self.get_collection(self._projects_collection).create_index(
             [("name", ASCENDING), ("description", ASCENDING)], unique=True
         )
         self.get_collection(self._people_collection).create_index(
             [("last_name", ASCENDING), ("first_name", ASCENDING), ("middle_name", ASCENDING)], unique=True
+        )
+        self.get_collection(self._weekly_updates_collection).create_index(
+            [("created", ASCENDING), ("worked_on", ASCENDING)], unique=False
         )
 
     def get_database(self) -> Connection:
@@ -335,3 +340,41 @@ class NeoSQLiteClient:  # pylint: disable=too-many-public-methods
         :returns: The result
         """
         return self.delete_one_document(collection_name=self._projects_collection, data_filter=data_filter)
+
+    def create_weekly_update_entry(self, worked_on: str, benefit_to_company: str) -> InsertOneResult:
+        """Create a new entry in the weekly update collection
+
+        :param worked_on: The document to create
+        :param benefit_to_company: The benefit to company
+
+        :returns: The result
+        """
+        document = WeeklyUpdate(worked_on=worked_on, benefit_to_company=benefit_to_company)
+
+        return self.get_collection(collection_name=self._weekly_updates_collection).insert_one(
+            document=document.model_dump()
+        )
+
+    def get_weekly_update_entries(
+        self,
+        data_filter: Optional[dict] = None,
+        skip: Optional[int] = 0,
+        limit: Optional[int] = 0,
+    ) -> list[WeeklyUpdate]:
+        """Get entries the weekly update collection
+
+        :returns: The data
+        """
+        found = []
+        this_projection = {"_id": False}
+
+        for project in self.find_documents(
+            collection_name=self._weekly_updates_collection,
+            data_filter=data_filter,
+            projection=this_projection,
+            skip=skip,
+            limit=limit,
+        ):
+            found.append(WeeklyUpdate(**project))
+
+        return found
