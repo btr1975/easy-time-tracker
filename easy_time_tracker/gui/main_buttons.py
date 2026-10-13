@@ -11,6 +11,7 @@ class MainButtons(tk.Frame):
     """Main Buttons Frame
 
     :param master: The tkinter object
+    :param font: The font
     """
 
     def __init__(self, master: tk.Misc, font: tuple[str, int]) -> None:

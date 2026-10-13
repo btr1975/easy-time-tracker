@@ -4,15 +4,17 @@ Project Frame
 
 from typing import Any
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from pydantic import BaseModel
 from easy_time_tracker.easy_time_tracker import EasyTimeTracker
+from easy_time_tracker.gui.notes_frame import NotesFrame
 
 
 class ProjectsFrame(tk.Frame):
     """The Projects Frame
 
     :param master: The master widget
+    :param font: The font
     """
 
     def __init__(self, master: tk.Misc, font: tuple[str, int]) -> None:
@@ -31,11 +33,18 @@ class ProjectsFrame(tk.Frame):
         self.project_description_text_box_label_object = tk.Label(self, font=self._font)
         self.project_description_text_box_object = tk.Entry(self, width=120)
 
+        self.add_note_button_object = tk.Button(self, height=1, width=10, font=self._font)
+        self.add_person_button_object = tk.Button(self, height=1, width=10, font=self._font)
+
         projects = self.get_projects_names_list()
         if len(projects) >= 1:
             self.projects_dropdown(projects=projects)
 
         self.project_description_text_box()
+        self.add_note_button()
+        self.add_person_button()
+
+        self.notes_frame: None | NotesFrame = None
 
     def get_projects_names_list(self) -> list[str]:
         """Get the project names
@@ -57,8 +66,8 @@ class ProjectsFrame(tk.Frame):
         """
         project = self._client.find_projects(name=name)[0]
 
+        self.project_description_text_box_object.delete(0, tk.END)
         self.project_description_text_box_object.insert(tk.END, project.description)
-        self.project_description_text_box()
 
         self.create_table(placement_row=2, data=project.people)
         self.create_table(placement_row=3, data=project.tickets)
@@ -132,3 +141,42 @@ class ProjectsFrame(tk.Frame):
             table.insert("", tk.END, values=row)
 
         table.grid(row=placement_row, columnspan=column_span, padx=1, pady=4)
+
+    def add_note_button_command_callback(self) -> None:
+        """Add a note to the projects
+
+        :returns: Nothing
+        """
+        if self.project_dropdown_clicked.get() == "NA":
+            messagebox.showerror(title="Error", message="You must select a project")
+            return
+
+        if self.notes_frame is None:
+            description = self.project_description_text_box_object.get()
+            project = self.project_dropdown_clicked.get()
+            self.destroy()
+            self.notes_frame = NotesFrame(
+                master=self.master,
+                font=self._font,
+                project=project,
+                description=description,
+                on_back=self.master.clear_projects_frame_callback,
+            )
+
+    def add_note_button(self) -> None:
+        """The button
+
+        :returns: Nothing
+        """
+        self.add_note_button_object["text"] = "Add Note"
+        self.add_note_button_object["command"] = self.add_note_button_command_callback
+        self.add_note_button_object.grid(row=5, column=0, padx=1, pady=1)
+
+    def add_person_button(self) -> None:
+        """The button
+
+        :returns: Nothing
+        """
+        self.add_person_button_object["text"] = "Add Person"
+        # self.add_person_button_object["command"] = self.delete_person_command_callback
+        self.add_person_button_object.grid(row=5, column=1, padx=1, pady=1)

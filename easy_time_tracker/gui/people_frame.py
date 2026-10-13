@@ -11,6 +11,7 @@ class PeopleFrame(tk.Frame):
     """The People Frame
 
     :param master: The master widget
+    :param font: The font
     """
 
     def __init__(self, master: tk.Misc, font: tuple[str, int]) -> None:
