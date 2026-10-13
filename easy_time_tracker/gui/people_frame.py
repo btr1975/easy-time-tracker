@@ -41,11 +41,11 @@ class PeopleFrame(tk.Frame):
 
         self.clear_person_button_object = tk.Button(self, height=1, width=10, font=self._font)
 
-        self.create_person_button_object = tk.Button(self, height=1, width=10, font=self._font)
+        self.create_person_button_object = tk.Button(self, height=1, width=10, font=self._font, bg="green")
 
-        self.update_person_button_object = tk.Button(self, height=1, width=10, font=self._font)
+        self.update_person_button_object = tk.Button(self, height=1, width=10, font=self._font, bg="yellow")
 
-        self.delete_person_button_object = tk.Button(self, height=1, width=10, font=self._font)
+        self.delete_person_button_object = tk.Button(self, height=1, width=10, font=self._font, bg="red")
 
         self.load_people_dropdown()
         self.person_first_name_text_box()
@@ -192,6 +192,10 @@ class PeopleFrame(tk.Frame):
         """
         first_name, middle_name, last_name, email_address = self.get_data_from_text_boxes()
 
+        if first_name == "" or last_name == "":
+            messagebox.showinfo(title="Information", message="You must enter first and last name")
+            return
+
         try:
             self._client.create_person(
                 first_name=first_name, middle_name=middle_name, last_name=last_name, email=email_address
@@ -210,6 +214,10 @@ class PeopleFrame(tk.Frame):
         """
         first_name, middle_name, last_name, email_address = self.get_data_from_text_boxes()
 
+        if first_name == "" or last_name == "":
+            messagebox.showinfo(title="Information", message="You must enter first and last name")
+            return
+
         kwargs = {"middle_name": middle_name, "email": email_address}
 
         try:
@@ -227,6 +235,10 @@ class PeopleFrame(tk.Frame):
         :returns: Nothing
         """
         first_name, middle_name, last_name, email_address = self.get_data_from_text_boxes()
+
+        if first_name == "" or last_name == "":
+            messagebox.showinfo(title="Information", message="You must enter first and last name")
+            return
 
         try:
             self._client.delete_person(first_name=first_name, last_name=last_name)
