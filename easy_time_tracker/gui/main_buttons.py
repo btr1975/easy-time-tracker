@@ -19,8 +19,11 @@ class MainButtons(tk.Frame):
         self.pack(padx=25, pady=25)
         self._font = ("Courier", 14)
 
+        self.projects_button_object = tk.Button(self, height=1, width=10, font=self._font)
+        self.people_button_object = tk.Button(self, height=1, width=10, font=self._font)
+
         self.projects_button()
-        self.other_button()
+        self.people_button()
 
         self.projects_frame: None | ProjectsFrame = None
         self.people_frame: None | PeopleFrame = None
@@ -66,17 +69,15 @@ class MainButtons(tk.Frame):
 
         :returns: Nothing
         """
-        button = tk.Button(self, height=1, width=10, font=self._font, name="projects_button")
-        button["text"] = "Projects"
-        button["command"] = self.projects_button_command_callback
-        button.pack(side="top")
+        self.projects_button_object["text"] = "Projects"
+        self.projects_button_object["command"] = self.projects_button_command_callback
+        self.projects_button_object.pack(side="top")
 
-    def other_button(self) -> None:
-        """The other button
+    def people_button(self) -> None:
+        """The people button
 
         :returns: Nothing
         """
-        button = tk.Button(self, height=1, width=10, bg="green", font=self._font, name="other_button")
-        button["text"] = "OTHER"
-        button["command"] = self.other_button_command_callback
-        button.pack(side="top")
+        self.people_button_object["text"] = "People"
+        self.people_button_object["command"] = self.other_button_command_callback
+        self.people_button_object.pack(side="top")

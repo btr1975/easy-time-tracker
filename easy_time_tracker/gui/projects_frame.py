@@ -23,8 +23,13 @@ class ProjectsFrame(tk.Frame):
         self.pack(padx=25, pady=25)
         self._font = ("Courier", 14)
 
-        self.project_dropdown_clicked = None
-        self.project_description_text = ""
+        self.projects_dropdown_object: tk.OptionMenu | None = None
+
+        # dropdown data type
+        self.project_dropdown_clicked = tk.StringVar()
+
+        self.project_description_text_box_label_object = tk.Label(self, font=self._font)
+        self.project_description_text_box_object = tk.Entry(self, width=120)
 
         projects = self.get_projects_names_list()
         if len(projects) >= 1:
@@ -52,7 +57,7 @@ class ProjectsFrame(tk.Frame):
         """
         project = self._client.find_projects(name=name)[0]
 
-        self.project_description_text = project.description
+        self.project_description_text_box_object.insert(tk.END, project.description)
         self.project_description_text_box()
 
         self.create_table(placement_row=2, data=project.people)
@@ -70,25 +75,24 @@ class ProjectsFrame(tk.Frame):
         label["text"] = "Project"
         label.grid(row=0, column=0, padx=1, pady=1)
 
-        # datatype of menu text
-        self.project_dropdown_clicked = tk.StringVar()
         # initial menu text
         self.project_dropdown_clicked.set("NA")
 
-        dropdown = tk.OptionMenu(self, self.project_dropdown_clicked, *projects, command=self.project_dropdown_callback)
-        dropdown.grid(row=0, column=1, padx=1, pady=1)
+        self.projects_dropdown_object = tk.OptionMenu(
+            self, self.project_dropdown_clicked, *projects, command=self.project_dropdown_callback
+        )
+        self.projects_dropdown_object.grid(row=0, column=1, padx=1, pady=1)
 
     def project_description_text_box(self) -> None:
         """The project description text box
 
         :returns: Nothing
         """
-        label = tk.Label(self, font=self._font)
-        label["text"] = "Description"
-        label.grid(row=1, column=0, padx=1, pady=1)
-        text_box = tk.Entry(self, width=120)
-        text_box.insert(tk.END, self.project_description_text)
-        text_box.grid(row=1, column=1, padx=1, pady=1)
+        self.project_description_text_box_label_object["text"] = "Description"
+        self.project_description_text_box_label_object.grid(row=1, column=0, padx=1, pady=1)
+
+        self.project_description_text_box_object.insert(tk.END, "")
+        self.project_description_text_box_object.grid(row=1, column=1, padx=1, pady=1)
 
     def create_table(self, placement_row: int, data: list[BaseModel]) -> None:
         """Create a table
